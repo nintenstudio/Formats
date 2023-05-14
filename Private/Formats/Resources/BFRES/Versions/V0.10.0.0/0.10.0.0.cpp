@@ -1,4 +1,4 @@
-#include <Formats/Resources/BFRES_Versions/0.10.0.0.h>
+#include <Formats/Resources/BFRES/Versions/0.10.0.0/0.10.0.0.h>
 
 namespace Formats::Resources::BFRES_Versions {
 	bool V0_10_0_0::Parse() {

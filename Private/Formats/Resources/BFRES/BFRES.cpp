@@ -1,16 +1,6 @@
-#include <Formats/Resources/BFRES.h>
+#include <Formats/Resources/BFRES/BFRES.h>
 
 namespace Formats::Resources {
-	bool BFRES::Parse() {
-		return false;
-	}
-	bool BFRES::Serialize() {
-		return false;
-	}
-	bool BFRES::RequestParse(Formats::ResourceParsedCallback callback) {
-		return false;
-	}
-
 	bool BFRES::ParseBaseInfo() {
 		char signature[4];
 		mStream->read(signature, 4);

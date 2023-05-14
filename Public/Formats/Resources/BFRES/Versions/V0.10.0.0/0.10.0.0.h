@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Formats/Resources/BYML.h>
+#include <Formats/Resources/BFRES/BFRES.h>
 
-namespace Formats::Resources::BYML_Versions {
-	class V7 : public Formats::Resources::BYML {
+namespace Formats::Resources::BFRES_Versions {
+	class V0_10_0_0 : public Formats::Resources::BFRES {
 	public:
 		virtual bool Parse() override;
 		virtual bool Serialize() override;

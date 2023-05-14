@@ -1,4 +1,4 @@
-#include <Formats/Resources/AAMP.h>
+#include <Formats/Resources/AAMP/AAMP.h>
 
 namespace Formats::Resources {
 	bool AAMP::Parse() {
