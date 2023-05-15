@@ -33,7 +33,7 @@ mStream.write(reinterpret_cast<char*>(&swapped), sizeof(swapped));
 
 namespace Formats::IO::BinaryIOStream_Versions {
 	class Little : public Formats::IO::BinaryIOStream {
-public:
+	public:
 		Little(std::iostream& stream) : Formats::IO::BinaryIOStream(stream) {
 
 		}
@@ -42,10 +42,12 @@ public:
 
 		READ(BYTE, Byte)
 		READ(SHORT, Short)
+		READ(INT24, Int24)
 		READ(INT, Int)
 		READ(LONG, Long)
 		READ(UBYTE, UByte)
 		READ(USHORT, UShort)
+		READ(UINT24, UInt24)
 		READ(UINT, UInt)
 		READ(ULONG, ULong)
 		READ(FLOAT, Float)
@@ -59,10 +61,12 @@ public:
 
 		WRITE(BYTE, Byte)
 		WRITE(SHORT, Short)
+		WRITE(INT24, Int24)
 		WRITE(INT, Int)
 		WRITE(LONG, Long)
 		WRITE(UBYTE, UByte)
 		WRITE(USHORT, UShort)
+		WRITE(UINT24, UInt24)
 		WRITE(UINT, UInt)
 		WRITE(ULONG, ULong)
 		WRITE(FLOAT, Float)

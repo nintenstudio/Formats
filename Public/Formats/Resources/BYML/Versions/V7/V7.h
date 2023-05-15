@@ -2,8 +2,8 @@
 
 #include <Formats/Resources/BYML/BYML.h>
 
-#include <Formats/Resources/BYML/Versions/7/Nodes/StringTable.h>
-#include <Formats/Resources/BYML/Versions/7/Node.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/StringTable.h>
+#include <Formats/Resources/BYML/Versions/V7/Node.h>
 
 #include <memory>
 

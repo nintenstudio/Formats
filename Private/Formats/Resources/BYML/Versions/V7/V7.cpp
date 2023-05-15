@@ -1,6 +1,6 @@
-#include <Formats/Resources/BYML/Versions/7/7.h>
+#include <Formats/Resources/BYML/Versions/V7/V7.h>
 
-#include <Formats/Resources/BYML/Versions/7/Nodes/StringTable.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/StringTable.h>
 #include <Formats/Aliases/Primitives.h>	
 
 namespace Formats::Resources::BYML::Versions::V7 {
@@ -11,9 +11,10 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		if (mVersion != 7)
 			return false;
 
-		mBStream->SeekRead(mBStream->ReadUInt());
+		mBStream->PushSeek(mBStream->ReadUInt());
 		mHashKeyTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>();
-
+		mHashKeyTable->Parse(*mBStream);
+		mBStream->PopSeek();
 		return false;
 	}
 	bool V7::Serialize() {
