@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Formats/Resources/BYML/Nodes/UInt64.h>
-#include <Formats/Resources/BYML/
-7.h>
 #include <Formats/Resources/BYML/Versions/V7/Node.h>
 
 #include <Formats/Resources/BYML/BYML.h>

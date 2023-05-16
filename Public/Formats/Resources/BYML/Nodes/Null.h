@@ -3,7 +3,7 @@
 #include <string>
 
 namespace Formats::Resources::BYML::Nodes {
-	class Bool {
+	class Null {
 	public:
 
 	};

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Formats/Resources/BYML/Nodes/Hash.h>
-#include <Formats/Resources/BYML/Versions/V7/7.h>
+#include <Formats/Resources/BYML/Versions/V7/V7.h>
 #include <Formats/Resources/BYML/Versions/V7/Node.h>
 
 #include <Formats/Resources/BYML/BYML.h>

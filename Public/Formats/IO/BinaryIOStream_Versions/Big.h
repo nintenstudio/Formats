@@ -3,6 +3,7 @@
 #include <Formats/IO/BinaryIOStream.h>
 
 #include <bit>
+#include <algorithm>
 
 #if (!FORMATS_BIGENDIAN)
 #define READ_ENDIAN_CODE std::reverse(&res, (&res) + 1);

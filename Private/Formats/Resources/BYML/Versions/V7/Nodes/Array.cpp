@@ -1,5 +1,18 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Array.h>
 
+#include <Formats/Resources/BYML/Versions/V7/Nodes/BinaryData.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Bool.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Double.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Float.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Hash.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Int.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Int64.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/Null.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/String.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/StringTable.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/UInt.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/UInt64.h>
+
 #include <cassert>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
@@ -19,20 +32,22 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = mNodeTypes.at(i);
 
 			switch (nodeType) {
-			case Formats::Resources::BYML::Versions::V7::NodeType::Array:
-				std::streampos offset = bStream.ReadUInt();
-				bStream.PushSeek(offset);
-				Formats::Resources::BYML::Versions::V7::Nodes::Array* node = new Formats::Resources::BYML::Versions::V7::Nodes::Array();
-				node->Parse(bStream);
-				mNodes.push_back(node);
-				bStream.PopSeek();
-			case Formats::Resources::BYML::Versions::V7::NodeType::BinaryData:
-				std::streampos offset = bStream.ReadUInt();
-				bStream.PushSeek(offset);
-				Formats::Resources::BYML::Versions::V7::Nodes::BinaryData* node = new Formats::Resources::BYML::Versions::V7::Nodes::BinaryData();
-				node->Parse(bStream);
-				mNodes.push_back(node);
-				bStream.PopSeek();
+				case Formats::Resources::BYML::Versions::V7::NodeType::Array: {
+					std::streampos offset = bStream.ReadUInt();
+					bStream.PushSeek(offset);
+					Formats::Resources::BYML::Versions::V7::Nodes::Array* node = new Formats::Resources::BYML::Versions::V7::Nodes::Array();
+					node->Parse(bStream);
+					mNodes.push_back(node);
+					bStream.PopSeek();
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::BinaryData: {
+					std::streampos offset = bStream.ReadUInt();
+					bStream.PushSeek(offset);
+					Formats::Resources::BYML::Versions::V7::Nodes::BinaryData* node = new Formats::Resources::BYML::Versions::V7::Nodes::BinaryData();
+					node->Parse(bStream);
+					mNodes.push_back(node);
+					bStream.PopSeek();
+				}
 			}
 		}
 
