@@ -2,7 +2,6 @@
 
 #include <Formats/IO/BinaryIOStream.h>
 
-#include <bit>
 #include <algorithm>
 
 #if (FORMATS_BIGENDIAN)
