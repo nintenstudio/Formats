@@ -40,18 +40,18 @@ namespace Formats::IO::BinaryIOStream_Versions {
 
 #pragma region READING
 
-		READ(BYTE, Byte)
-		READ(SHORT, Short)
-		READ(INT24, Int24)
-		READ(INT, Int)
-		READ(LONG, Long)
-		READ(UBYTE, UByte)
-		READ(USHORT, UShort)
-		READ(UINT24, UInt24)
-		READ(UINT, UInt)
-		READ(ULONG, ULong)
-		READ(FLOAT, Float)
-		READ(DOUBLE, Double)
+		READ(F_BYTE, Byte)
+		READ(F_SHORT, Short)
+		READ(F_INT24, Int24)
+		READ(F_INT, Int)
+		READ(F_LONG, Long)
+		READ(F_UBYTE, UByte)
+		READ(F_USHORT, UShort)
+		READ(F_UINT24, UInt24)
+		READ(F_UINT, UInt)
+		READ(F_ULONG, ULong)
+		READ(F_FLOAT, Float)
+		READ(F_DOUBLE, Double)
 
 #pragma endregion
 
@@ -59,18 +59,18 @@ namespace Formats::IO::BinaryIOStream_Versions {
 
 
 
-		WRITE(BYTE, Byte)
-		WRITE(SHORT, Short)
-		WRITE(INT24, Int24)
-		WRITE(INT, Int)
-		WRITE(LONG, Long)
-		WRITE(UBYTE, UByte)
-		WRITE(USHORT, UShort)
-		WRITE(UINT24, UInt24)
-		WRITE(UINT, UInt)
-		WRITE(ULONG, ULong)
-		WRITE(FLOAT, Float)
-		WRITE(DOUBLE, Double)
+		WRITE(F_BYTE, Byte)
+		WRITE(F_SHORT, Short)
+		WRITE(F_INT24, Int24)
+		WRITE(F_INT, Int)
+		WRITE(F_LONG, Long)
+		WRITE(F_UBYTE, UByte)
+		WRITE(F_USHORT, UShort)
+		WRITE(F_UINT24, UInt24)
+		WRITE(F_UINT, UInt)
+		WRITE(F_ULONG, ULong)
+		WRITE(F_FLOAT, Float)
+		WRITE(F_DOUBLE, Double)
 #pragma endregion
 	};
 }

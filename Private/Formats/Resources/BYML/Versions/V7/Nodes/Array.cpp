@@ -18,9 +18,9 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool Array::Parse(Formats::IO::BinaryIOStream& bStream) {
 		assert(bStream.ReadByte() == Formats::Resources::BYML::Versions::V7::NodeType::StringTable);
-		UINT numEntries = bStream.ReadUInt24();
+		F_UINT numEntries = bStream.ReadUInt24();
 
-		for (UINT i = 0; i < numEntries; i++) {
+		for (F_UINT i = 0; i < numEntries; i++) {
 			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = (Formats::Resources::BYML::Versions::V7::NodeType::NodeType)bStream.ReadByte();
 
 			mNodeTypes.push_back(nodeType);
@@ -28,7 +28,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		bStream.AlignSeek(4);
 
-		for (UINT i = 0; i < numEntries; i++) {
+		for (F_UINT i = 0; i < numEntries; i++) {
 			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = mNodeTypes.at(i);
 
 			switch (nodeType) {

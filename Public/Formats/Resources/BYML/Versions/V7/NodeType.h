@@ -3,7 +3,7 @@
 #include <Formats/Aliases/Primitives.h>
 
 namespace Formats::Resources::BYML::Versions::V7::NodeType {
-	enum NodeType : UBYTE {
+	enum NodeType : F_UBYTE {
 		String = 0xA0,
 		BinaryData = 0xA1,
 		Array = 0xC0,
