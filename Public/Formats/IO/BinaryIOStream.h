@@ -13,6 +13,11 @@ namespace Formats::IO {
 
 		}
 
+		inline void Seek(std::streampos pos) {
+			mStream.seekg(pos);
+			mStream.seekp(pos);
+		}
+
 		inline void PushSeek(std::streampos pos) {
 			mSeekStack.push_back(mStream.tellg());
 
@@ -23,8 +28,8 @@ namespace Formats::IO {
 		inline std::streampos PopSeek() {
 			std::streampos res = mStream.tellg();
 
-			mStream.seekg(*mSeekStack.end());
-			mStream.seekp(*mSeekStack.end());
+			mStream.seekg(mSeekStack.back());
+			mStream.seekp(mSeekStack.back());
 			mSeekStack.pop_back();
 			
 			return res;
@@ -36,7 +41,7 @@ namespace Formats::IO {
 
 		inline void AlignSeek(std::streampos alignment) {
 			std::streampos pos = mStream.tellg();
-			pos = alignment - (pos % alignment) + pos;
+			pos = (pos % alignment == 0) ? pos : alignment - (pos % alignment) + pos;
 			mStream.seekg(pos);
 			mStream.seekp(pos);
 		}

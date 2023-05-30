@@ -12,10 +12,10 @@ namespace Formats::Resources::BYML::Versions::V7 {
 	public:
 		virtual bool Parse() override;
 		virtual bool Serialize() override;
-		virtual bool RequestParse(Formats::ResourceParsedCallback callback) override;
+		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) override;
 
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mHashKeyTable;
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mStringTable;
-		Formats::Resources::BYML::Versions::V7::Node* mRoot;
+		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node> mRoot;
 	};
 }

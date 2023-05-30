@@ -1,6 +1,11 @@
 #include <Formats/Resources/BFRES/BFRES.h>
 
-namespace Formats::Resources {
+namespace Formats::Resources::BFRES {
+	std::shared_ptr<BFRES> BFRES::Factory(std::iostream* stream) {
+
+		return nullptr;
+	}
+
 	bool BFRES::ParseBaseInfo() {
 		char signature[4];
 		mStream->read(signature, 4);

@@ -3,10 +3,10 @@
 #include <Formats/Resources/BFRES/BFRES.h>
 
 namespace Formats::Resources::BFRES_Versions {
-	class V0_10_0_0 : public Formats::Resources::BFRES {
+	class V0_10_0_0 : public Formats::Resources::BFRES::BFRES {
 	public:
 		virtual bool Parse() override;
 		virtual bool Serialize() override;
-		virtual bool RequestParse(Formats::ResourceParsedCallback callback) override;
+		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) override;
 	};
 }

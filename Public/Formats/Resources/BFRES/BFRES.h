@@ -1,13 +1,17 @@
 #pragma once
 
-#include <Formats/Resource.h>
+#include <Formats/Resources/Resource.h>
 
-namespace Formats::Resources {
-	class BFRES : public Formats::Resource {
+#include <memory>
+
+namespace Formats::Resources::BFRES {
+	class BFRES : public Formats::Resources::Resource {
 	public:
+		static std::shared_ptr<BFRES> Factory(std::iostream* stream);
+
 		virtual bool Parse() = 0;
 		virtual bool Serialize() = 0;
-		virtual bool RequestParse(Formats::ResourceParsedCallback callback) = 0;
+		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) = 0;
 
 		unsigned char mVersionMajor1;
 		unsigned char mVersionMajor2;

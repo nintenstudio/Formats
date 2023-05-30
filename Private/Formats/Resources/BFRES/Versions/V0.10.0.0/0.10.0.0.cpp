@@ -2,7 +2,7 @@
 
 namespace Formats::Resources::BFRES_Versions {
 	bool V0_10_0_0::Parse() {
-		if (!Formats::Resources::BFRES::ParseBaseInfo())
+		if (!Formats::Resources::BFRES::BFRES::ParseBaseInfo())
 			return false;
 
 		if (mVersionMajor1 != 0 || mVersionMajor2 != 10 || mVersionMinor1 != 0 || mVersionMinor2 != 0)

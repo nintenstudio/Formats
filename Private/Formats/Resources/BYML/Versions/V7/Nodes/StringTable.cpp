@@ -3,17 +3,19 @@
 #include <Formats/Resources/BYML/Versions/V7/NodeType.h>
 #include <Formats/Aliases/Primitives.h>
 
-#include <cassert>
-
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool StringTable::Parse(Formats::IO::BinaryIOStream& bStream) {
+		std::streampos nodeStart = bStream.GetSeek();
+
+		if (bStream.ReadUByte() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable) {
+			bStream.Seek(nodeStart);
+			return false;
+		}
+
 		mStrings.clear();
 
-		std::streampos nodeStart = bStream.GetSeek();
-		assert(bStream.ReadByte() == Formats::Resources::BYML::Versions::V7::NodeType::StringTable);
-
 		F_UINT24 numEntries = bStream.ReadUInt24();
-		mStrings.resize(numEntries);
+		mStrings.reserve(numEntries);
 		for (F_UINT i = 0; i < numEntries + 1; i++) {
 			std::streampos stringOffset = bStream.ReadUInt();
 			bStream.PushSeek(nodeStart + stringOffset);

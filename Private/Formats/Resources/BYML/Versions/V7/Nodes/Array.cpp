@@ -3,21 +3,28 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/BinaryData.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Bool.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Double.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/FileData.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Float.h>
-#include <Formats/Resources/BYML/Versions/V7/Nodes/Hash.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Int.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Int64.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Null.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/PlainHash.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/String.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/StringHash.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/StringTable.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/UInt.h>
 #include <Formats/Resources/BYML/Versions/V7/Nodes/UInt64.h>
-
-#include <cassert>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/ValueHash.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool Array::Parse(Formats::IO::BinaryIOStream& bStream) {
-		assert(bStream.ReadByte() == Formats::Resources::BYML::Versions::V7::NodeType::StringTable);
+		std::streampos nodeStart = bStream.GetSeek();
+
+		if (bStream.ReadUByte() != Formats::Resources::BYML::Versions::V7::NodeType::Array) {
+			bStream.Seek(nodeStart);
+			return false;
+		}
+
 		F_UINT numEntries = bStream.ReadUInt24();
 
 		for (F_UINT i = 0; i < numEntries; i++) {

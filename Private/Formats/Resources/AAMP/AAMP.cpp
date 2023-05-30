@@ -1,13 +1,18 @@
 #include <Formats/Resources/AAMP/AAMP.h>
 
-namespace Formats::Resources {
+namespace Formats::Resources::AAMP {
+	std::shared_ptr<AAMP> AAMP::Factory(std::iostream* stream) {
+
+		return nullptr;
+	}
+
 	bool AAMP::Parse() {
 		return false;
 	}
 	bool AAMP::Serialize() {
 		return false;
 	}
-	bool AAMP::RequestParse(Formats::ResourceParsedCallback callback) {
+	bool AAMP::RequestParse(Formats::Resources::ResourceParsedCallback callback) {
 		return false;
 	}
 }

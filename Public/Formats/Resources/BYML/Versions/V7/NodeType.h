@@ -4,10 +4,13 @@
 
 namespace Formats::Resources::BYML::Versions::V7::NodeType {
 	enum NodeType : F_UBYTE {
+		PlainHash = 0x20,
+		ValueHash = 0x21,
 		String = 0xA0,
 		BinaryData = 0xA1,
+		FileData = 0xA2,
 		Array = 0xC0,
-		Hash = 0xC1,
+		StringHash = 0xC1,
 		StringTable = 0xC2,
 		Bool = 0xD0,
 		Int = 0xD1,
