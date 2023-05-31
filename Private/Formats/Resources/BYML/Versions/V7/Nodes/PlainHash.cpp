@@ -1,11 +1,11 @@
-#include <Formats/Resources/BYML/Versions/V7/Nodes/ValueHash.h>
+#include <Formats/Resources/BYML/Versions/V7/Nodes/PlainHash.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
-	bool ValueHash::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool PlainHash::Parse(Formats::IO::BinaryIOStream& bStream) {
 
 		return false;
 	}
-	bool ValueHash::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool PlainHash::Serialize(Formats::IO::BinaryIOStream& bStream) {
 
 		return true;
 	}

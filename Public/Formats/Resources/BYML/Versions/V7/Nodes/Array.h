@@ -8,6 +8,7 @@
 #include <Formats/Resources/BYML/Versions/V7/NodeType.h>
 #include <Formats/Aliases/Primitives.h>
 #include <vector>
+#include <memory>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Array : public Formats::Resources::BYML::Nodes::Array, public Formats::Resources::BYML::Versions::V7::Node {
@@ -16,6 +17,6 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 
 		std::vector<Formats::Resources::BYML::Versions::V7::NodeType::NodeType> mNodeTypes;
-		std::vector<Formats::Resources::BYML::Versions::V7::Node*> mNodes;
+		std::vector<std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mNodes;
 	};
 }
