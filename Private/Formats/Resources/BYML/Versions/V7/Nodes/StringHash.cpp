@@ -23,10 +23,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		if (bStream.ReadUByte() != Formats::Resources::BYML::Versions::V7::NodeType::StringHash)
 			return false;
 
-		F_UINT numEntries = bStream.ReadUInt24();
+		F_U32 numEntries = bStream.ReadUInt24();
 
-		for (F_UINT i = 0; i < numEntries; i++) {
-			F_UINT keyIndex = bStream.ReadUInt24();
+		for (F_U32 i = 0; i < numEntries; i++) {
+			F_U32 keyIndex = bStream.ReadUInt24();
 			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = (Formats::Resources::BYML::Versions::V7::NodeType::NodeType)bStream.ReadUByte();
 
 			switch (nodeType) {

@@ -15,6 +15,6 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 
-		std::map<F_UINT, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mMap;
+		std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mMap;
 	};
 }

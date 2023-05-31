@@ -27,9 +27,9 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 			return false;
 		}
 
-		F_UINT numEntries = bStream.ReadUInt24();
+		F_U32 numEntries = bStream.ReadUInt24();
 
-		for (F_UINT i = 0; i < numEntries; i++) {
+		for (F_U32 i = 0; i < numEntries; i++) {
 			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = (Formats::Resources::BYML::Versions::V7::NodeType::NodeType)bStream.ReadByte();
 
 			mNodeTypes.push_back(nodeType);
@@ -37,7 +37,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		bStream.AlignSeek(4);
 
-		for (F_UINT i = 0; i < numEntries; i++) {
+		for (F_U32 i = 0; i < numEntries; i++) {
 			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = mNodeTypes.at(i);
 
 			switch (nodeType) {

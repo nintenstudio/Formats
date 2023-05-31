@@ -55,35 +55,35 @@ namespace Formats::IO {
 			mStream << value.c_str();
 		}
 
-		virtual F_BYTE ReadByte() = 0;
-		virtual F_SHORT ReadShort() = 0;
-		virtual F_INT24 ReadInt24() = 0;
-		virtual F_INT ReadInt() = 0;
-		virtual F_LONG ReadLong() = 0;
+		virtual F_S8 ReadByte() = 0;
+		virtual F_S16 ReadShort() = 0;
+		virtual F_S24 ReadInt24() = 0;
+		virtual F_S32 ReadInt() = 0;
+		virtual F_S64 ReadLong() = 0;
 
-		virtual F_UBYTE ReadUByte() = 0;
-		virtual F_USHORT ReadUShort() = 0;
-		virtual F_UINT24 ReadUInt24() = 0;
-		virtual F_UINT ReadUInt() = 0;
-		virtual F_ULONG ReadULong() = 0;
+		virtual F_U8 ReadUByte() = 0;
+		virtual F_U16 ReadUShort() = 0;
+		virtual F_U24 ReadUInt24() = 0;
+		virtual F_U32 ReadUInt() = 0;
+		virtual F_U64 ReadULong() = 0;
 
-		virtual F_FLOAT ReadFloat() = 0;
-		virtual F_DOUBLE ReadDouble() = 0;
+		virtual F_F32 ReadFloat() = 0;
+		virtual F_F64 ReadDouble() = 0;
 
-		virtual void WriteByte(F_BYTE value) = 0;
-		virtual void WriteShort(F_SHORT value) = 0;
-		virtual void WriteInt24(F_INT24 value) = 0;
-		virtual void WriteInt(F_INT value) = 0;
-		virtual void WriteLong(F_LONG value) = 0;
+		virtual void WriteByte(F_S8 value) = 0;
+		virtual void WriteShort(F_S16 value) = 0;
+		virtual void WriteInt24(F_S24 value) = 0;
+		virtual void WriteInt(F_S32 value) = 0;
+		virtual void WriteLong(F_S64 value) = 0;
 
-		virtual void WriteUByte(F_UBYTE value) = 0;
-		virtual void WriteUShort(F_USHORT value) = 0;
-		virtual void WriteUInt24(F_UINT24 value) = 0;
-		virtual void WriteUInt(F_UINT value) = 0;
-		virtual void WriteULong(F_ULONG value) = 0;
+		virtual void WriteUByte(F_U8 value) = 0;
+		virtual void WriteUShort(F_U16 value) = 0;
+		virtual void WriteUInt24(F_U24 value) = 0;
+		virtual void WriteUInt(F_U32 value) = 0;
+		virtual void WriteULong(F_U64 value) = 0;
 
-		virtual void WriteFloat(F_FLOAT value) = 0;
-		virtual void WriteDouble(F_DOUBLE value) = 0;
+		virtual void WriteFloat(F_F32 value) = 0;
+		virtual void WriteDouble(F_F64 value) = 0;
 
 	protected:
 		std::iostream& mStream;
