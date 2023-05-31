@@ -11,7 +11,13 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class FileData : public Formats::Resources::BYML::Nodes::FileData, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		~FileData();
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		F_U32 mDataSize;
+		F_U32 mUkn0x4;
+		F_U8* mData;
 	};
 }

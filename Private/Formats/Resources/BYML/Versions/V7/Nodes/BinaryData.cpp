@@ -6,12 +6,19 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	bool BinaryData::Parse(Formats::IO::BinaryIOStream& bStream) {
+		delete mData;
+
 		mDataSize = bStream.ReadU32();
 
+		mData = new F_U8[mDataSize];
+		bStream.ReadBytes(mData, mDataSize);
 
 		return true;
 	}
 	bool BinaryData::Serialize(Formats::IO::BinaryIOStream& bStream) {
+		bStream.WriteU32(mDataSize);
+
+		bStream.WriteBytes(mData, mDataSize);
 
 		return true;
 	}

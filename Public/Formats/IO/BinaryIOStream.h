@@ -85,6 +85,14 @@ namespace Formats::IO {
 		virtual void WriteF32(F_F32 value) = 0;
 		virtual void WriteF64(F_F64 value) = 0;
 
+		void ReadBytes(F_U8* out, F_U32 size) {
+			mStream.read(reinterpret_cast<char*>(out), size);
+		}
+
+		void WriteBytes(F_U8* in, F_U32 size) {
+			mStream.write(reinterpret_cast<char*>(in), size);
+		}
+
 	protected:
 		std::iostream& mStream;
 		std::vector<std::streampos> mSeekStack;

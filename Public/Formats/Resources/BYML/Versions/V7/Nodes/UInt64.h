@@ -12,5 +12,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	public:
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		F_U64 mValue;
 	};
 }

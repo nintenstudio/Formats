@@ -1,11 +1,26 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/FileData.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
-	bool FileData::Parse(Formats::IO::BinaryIOStream& bStream) {
+	FileData::~FileData() {
+		delete mData;
+	}
 
-		return false;
+	bool FileData::Parse(Formats::IO::BinaryIOStream& bStream) {
+		delete mData;
+
+		mDataSize = bStream.ReadU32();
+		mUkn0x4 = bStream.ReadU32();
+
+		mData = new F_U8[mDataSize];
+		bStream.ReadBytes(mData, mDataSize);
+
+		return true;
 	}
 	bool FileData::Serialize(Formats::IO::BinaryIOStream& bStream) {
+		bStream.WriteU32(mDataSize);
+		bStream.WriteU32(mUkn0x4);
+
+		bStream.WriteBytes(mData, mDataSize);
 
 		return true;
 	}

@@ -17,6 +17,6 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 
 		F_U32 mDataSize;
-		void* mData;
+		F_U8* mData;
 	};
 }
