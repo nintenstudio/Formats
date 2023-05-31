@@ -37,7 +37,7 @@ namespace Formats::Resources::BYML {
 		else
 			return false;
 
-		mVersion = mBStream->ReadUShort();
+		mVersion = mBStream->ReadU16();
 
 		return true;
 	}

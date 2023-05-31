@@ -17,17 +17,17 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		if (mVersion != 7)
 			return false;
 
-		mBStream->PushSeek(mBStream->ReadUInt());
+		mBStream->PushSeek(mBStream->ReadU32());
 		mHashKeyTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>();
 		assert(mHashKeyTable->Parse(*mBStream));
 		mBStream->PopSeek();
 
-		mBStream->PushSeek(mBStream->ReadUInt());
+		mBStream->PushSeek(mBStream->ReadU32());
 		mStringTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>();
 		assert(mStringTable->Parse(*mBStream));
 		mBStream->PopSeek();
 		
-		mBStream->PushSeek(mBStream->ReadUInt());
+		mBStream->PushSeek(mBStream->ReadU32());
 		mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Array>();
 		if (mRoot->Parse(*mBStream)) {
 			mBStream->PopSeek();

@@ -1,9 +1,15 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/BinaryData.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
-	bool BinaryData::Parse(Formats::IO::BinaryIOStream& bStream) {
+	BinaryData::~BinaryData() {
+		delete mData;
+	}
 
-		return false;
+	bool BinaryData::Parse(Formats::IO::BinaryIOStream& bStream) {
+		mDataSize = bStream.ReadU32();
+
+
+		return true;
 	}
 	bool BinaryData::Serialize(Formats::IO::BinaryIOStream& bStream) {
 

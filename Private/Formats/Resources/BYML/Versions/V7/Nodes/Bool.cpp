@@ -2,12 +2,12 @@
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool Bool::Parse(Formats::IO::BinaryIOStream& bStream) {
-		mValue = bStream.ReadUInt();
+		mValue = bStream.ReadU32();
 
 		return true;
 	}
 	bool Bool::Serialize(Formats::IO::BinaryIOStream& bStream) {
-		bStream.WriteUInt(mValue);
+		bStream.WriteU32(mValue);
 
 		return true;
 	}

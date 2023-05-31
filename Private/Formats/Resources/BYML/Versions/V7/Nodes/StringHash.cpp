@@ -20,18 +20,18 @@
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool StringHash::Parse(Formats::IO::BinaryIOStream& bStream) {
-		if (bStream.ReadUByte() != Formats::Resources::BYML::Versions::V7::NodeType::StringHash)
+		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringHash)
 			return false;
 
-		F_U32 numEntries = bStream.ReadUInt24();
+		F_U32 numEntries = bStream.ReadU24();
 
 		for (F_U32 i = 0; i < numEntries; i++) {
-			F_U32 keyIndex = bStream.ReadUInt24();
-			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = (Formats::Resources::BYML::Versions::V7::NodeType::NodeType)bStream.ReadUByte();
+			F_U32 keyIndex = bStream.ReadU24();
+			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = (Formats::Resources::BYML::Versions::V7::NodeType::NodeType)bStream.ReadU8();
 
 			switch (nodeType) {
 				case Formats::Resources::BYML::Versions::V7::NodeType::Array: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Array> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Array>();
 					node->Parse(bStream);
@@ -40,7 +40,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::BinaryData: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::BinaryData> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::BinaryData>();
 					node->Parse(bStream);
@@ -55,7 +55,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::Double: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Double> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Double>();
 					node->Parse(bStream);
@@ -64,7 +64,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::FileData: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::FileData> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::FileData>();
 					node->Parse(bStream);
@@ -85,7 +85,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::Int64: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Int64> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Int64>();
 					node->Parse(bStream);
@@ -100,7 +100,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::PlainHash: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash>();
 					node->Parse(bStream);
@@ -115,7 +115,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::StringHash: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringHash>();
 					node->Parse(bStream);
@@ -124,7 +124,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::StringTable: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>();
 					node->Parse(bStream);
@@ -139,7 +139,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::UInt64: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::UInt64> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::UInt64>();
 					node->Parse(bStream);
@@ -148,7 +148,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::ValueHash: {
-					std::streampos offset = bStream.ReadUInt();
+					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
 					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash>();
 					node->Parse(bStream);

@@ -7,17 +7,17 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool StringTable::Parse(Formats::IO::BinaryIOStream& bStream) {
 		std::streampos nodeStart = bStream.GetSeek();
 
-		if (bStream.ReadUByte() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable) {
+		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable) {
 			bStream.Seek(nodeStart);
 			return false;
 		}
 
 		mStrings.clear();
 
-		F_U24 numEntries = bStream.ReadUInt24();
+		F_U24 numEntries = bStream.ReadU24();
 		mStrings.reserve(numEntries);
 		for (F_U32 i = 0; i < numEntries + 1; i++) {
-			std::streampos stringOffset = bStream.ReadUInt();
+			std::streampos stringOffset = bStream.ReadU32();
 			bStream.PushSeek(nodeStart + stringOffset);
 			
 			mStrings.push_back(bStream.ReadZeroTerminatedString());
@@ -28,7 +28,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return true;
 	}
 	bool StringTable::Serialize(Formats::IO::BinaryIOStream& bStream) {
-		bStream.WriteByte(Formats::Resources::BYML::Versions::V7::NodeType::StringTable);
+		bStream.WriteS8(Formats::Resources::BYML::Versions::V7::NodeType::StringTable);
 		
 		std::streampos stringOffsetsStart = bStream.GetSeek();
 		std::streampos stringsStart = stringOffsetsStart + (std::streampos)(sizeof(F_U32) * mStrings.size() + 1);
@@ -37,7 +37,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 			std::streampos stringPos = bStream.GetSeek();
 			bStream.WriteZeroTerminatedString(mStrings.at(i));
 			bStream.PushSeek(stringOffsetsStart + (std::streampos)(sizeof(F_U32) * i));
-			bStream.WriteUInt(stringPos);
+			bStream.WriteU32(stringPos);
 			bStream.PopSeek();
 		}
 		bStream.PopSeek();
