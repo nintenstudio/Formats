@@ -20,12 +20,8 @@
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool Array::Parse(Formats::IO::BinaryIOStream& bStream) {
-		std::streampos nodeStart = bStream.GetSeek();
-
-		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::Array) {
-			bStream.Seek(nodeStart);
+		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::Array)
 			return false;
-		}
 
 		F_U32 numEntries = bStream.ReadU24();
 

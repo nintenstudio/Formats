@@ -7,10 +7,8 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool StringTable::Parse(Formats::IO::BinaryIOStream& bStream) {
 		std::streampos nodeStart = bStream.GetSeek();
 
-		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable) {
-			bStream.Seek(nodeStart);
+		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable)
 			return false;
-		}
 
 		mStrings.clear();
 

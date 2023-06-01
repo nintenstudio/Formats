@@ -27,22 +27,26 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		assert(mStringTable->Parse(*mBStream));
 		mBStream->PopSeek();
 		
-		mBStream->PushSeek(mBStream->ReadU32());
+		F_U32 rootNodePos = mBStream->ReadU32();
+		mBStream->PushSeek(rootNodePos);
 		mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Array>();
 		if (mRoot->Parse(*mBStream)) {
 			mBStream->PopSeek();
 			return true;
 		}
+		mBStream->Seek(rootNodePos);
 		mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash>();
 		if (mRoot->Parse(*mBStream)) {
 			mBStream->PopSeek();
 			return true;
 		}
+		mBStream->Seek(rootNodePos);
 		mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash>();
 		if (mRoot->Parse(*mBStream)) {
 			mBStream->PopSeek();
 			return true;
 		}
+		mBStream->Seek(rootNodePos);
 		mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringHash>();
 		if (mRoot->Parse(*mBStream)) {
 			mBStream->PopSeek();
