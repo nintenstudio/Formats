@@ -11,8 +11,14 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Int64 : public Formats::Resources::BYML::Nodes::Int64, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		Int64(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		virtual F_S64 GetValue() override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
 
 		F_S64 mValue;
 	};

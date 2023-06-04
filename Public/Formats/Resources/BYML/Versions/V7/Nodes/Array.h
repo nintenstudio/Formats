@@ -13,10 +13,17 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Array : public Formats::Resources::BYML::Nodes::Array, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		Array(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 
+		virtual F_U32 GetNodeCount() override;
+		virtual std::shared_ptr<Formats::Resources::BYML::Node> GetNode(F_U32 index) override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
+
 		std::vector<Formats::Resources::BYML::Versions::V7::NodeType::NodeType> mNodeTypes;
-		std::vector<std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mNodes;
+		std::vector<std::shared_ptr<Formats::Resources::BYML::Node>> mNodes;
 	};
 }

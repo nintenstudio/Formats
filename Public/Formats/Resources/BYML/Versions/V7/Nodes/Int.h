@@ -11,8 +11,14 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Int : public Formats::Resources::BYML::Nodes::Int, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		Int(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		virtual F_S32 GetValue() override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
 
 		F_S32 mValue;
 	};

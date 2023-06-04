@@ -3,7 +3,7 @@
 #include <Formats/Resources/BYML/BYML.h>
 
 #include <Formats/Resources/BYML/Versions/V7/Nodes/StringTable.h>
-#include <Formats/Resources/BYML/Versions/V7/Node.h>
+#include <Formats/Resources/BYML/Node.h>
 
 #include <memory>
 
@@ -14,8 +14,10 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		virtual bool Serialize() override;
 		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) override;
 
+		virtual std::string ToYAML() override;
+
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mHashKeyTable;
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mStringTable;
-		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node> mRoot;
+		std::shared_ptr<Formats::Resources::BYML::Node> mRoot;
 	};
 }

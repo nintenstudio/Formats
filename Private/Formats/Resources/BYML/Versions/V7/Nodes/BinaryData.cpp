@@ -1,6 +1,10 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/BinaryData.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
+	BinaryData::BinaryData(Formats::Resources::BYML::Versions::V7::V7* parentBYML) : Formats::Resources::BYML::Versions::V7::Node::Node(parentBYML) {
+
+	}
+
 	BinaryData::~BinaryData() {
 		delete mData;
 	}
@@ -21,5 +25,16 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		bStream.WriteBytes(mData, mDataSize);
 
 		return true;
+	}
+
+	F_U8* BinaryData::GetData() {
+		return mData;
+	}
+	F_U32 BinaryData::GetDataSize() {
+		return mDataSize;
+	}
+
+	void BinaryData::EmitYAML(YAML::Emitter& out) {
+		out << "BinaryData!";
 	}
 }

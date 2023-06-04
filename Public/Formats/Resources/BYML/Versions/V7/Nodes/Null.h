@@ -11,7 +11,11 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Null : public Formats::Resources::BYML::Nodes::Null, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		Null(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
 	};
 }

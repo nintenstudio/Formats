@@ -4,6 +4,10 @@
 #include <Formats/Aliases/Primitives.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
+	StringTable::StringTable(Formats::Resources::BYML::Versions::V7::V7* parentBYML) : Formats::Resources::BYML::Versions::V7::Node::Node(parentBYML) {
+
+	}
+
 	bool StringTable::Parse(Formats::IO::BinaryIOStream& bStream) {
 		std::streampos nodeStart = bStream.GetSeek();
 
@@ -41,5 +45,9 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		bStream.PopSeek();
 
 		return true;
+	}
+
+	void StringTable::EmitYAML(YAML::Emitter& out) {
+
 	}
 }

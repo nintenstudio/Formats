@@ -11,10 +11,16 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class FileData : public Formats::Resources::BYML::Nodes::FileData, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		FileData(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
 		~FileData();
 
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		virtual F_U8* GetData() override;
+		virtual F_U32 GetDataSize() override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
 
 		F_U32 mDataSize;
 		F_U32 mUkn0x4;

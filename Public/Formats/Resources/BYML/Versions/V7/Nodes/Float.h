@@ -11,8 +11,14 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Float : public Formats::Resources::BYML::Nodes::Float, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		Float(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		virtual F_F32 GetValue() override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
 
 		F_F32 mValue;
 	};

@@ -1,6 +1,9 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/FileData.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
+	FileData::FileData(Formats::Resources::BYML::Versions::V7::V7* parentBYML) : Formats::Resources::BYML::Versions::V7::Node::Node(parentBYML) {
+
+	}
 	FileData::~FileData() {
 		delete mData;
 	}
@@ -23,5 +26,16 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		bStream.WriteBytes(mData, mDataSize);
 
 		return true;
+	}
+
+	F_U8* FileData::GetData() {
+		return mData;
+	}
+	F_U32 FileData::GetDataSize() {
+		return mDataSize;
+	}
+
+	void FileData::EmitYAML(YAML::Emitter& out) {
+		out << "FileData!";
 	}
 }

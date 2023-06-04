@@ -1,6 +1,10 @@
 #include <Formats/Resources/BYML/Versions/V7/Nodes/Int64.h>
 
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
+	Int64::Int64(Formats::Resources::BYML::Versions::V7::V7* parentBYML) : Formats::Resources::BYML::Versions::V7::Node::Node(parentBYML) {
+
+	}
+
 	bool Int64::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadS64();
 
@@ -10,5 +14,13 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		bStream.WriteS64(mValue);
 
 		return true;
+	}
+
+	F_S64 Int64::GetValue() {
+		return mValue;
+	}
+
+	void Int64::EmitYAML(YAML::Emitter& out) {
+		out << mValue;
 	}
 }

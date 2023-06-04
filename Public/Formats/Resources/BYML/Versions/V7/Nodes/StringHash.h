@@ -12,9 +12,16 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class StringHash : public Formats::Resources::BYML::Nodes::StringHash, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		StringHash(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 
-		std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mMap;
+		virtual std::vector<std::string> GetKeys() override;
+		virtual std::shared_ptr<Formats::Resources::BYML::Node> GetValue(std::string key) override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
+
+		std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Node>> mMap;
 	};
 }

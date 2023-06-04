@@ -1,5 +1,6 @@
 #include <Formats/Resources/BYML/BYML.h>
 
+#include <Formats/Resources/BYML/Versions/V4/V4.h>
 #include <Formats/Resources/BYML/Versions/V7/V7.h>
 
 #include <Formats/IO/BinaryIOStream_Versions/Little.h>
@@ -10,7 +11,10 @@ namespace Formats::Resources::BYML {
 		std::streampos startGPos = stream->tellg();
 		std::streampos startPPos = stream->tellp();
 
-
+		std::shared_ptr<Formats::Resources::BYML::Versions::V4::V4> v4 = std::make_shared<Formats::Resources::BYML::Versions::V4::V4>();
+		v4->SetStream(stream);
+		if (v4->Parse())
+			return v4;
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::V7> v7 = std::make_shared<Formats::Resources::BYML::Versions::V7::V7>();
 		v7->SetStream(stream);
 		if (v7->Parse())

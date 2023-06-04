@@ -4,6 +4,7 @@
 #include <Formats/IO/BinaryIOStream.h>
 #include <Formats/IO/Endianness.h>
 
+#include <string>
 #include <memory>
 
 namespace Formats::Resources::BYML {
@@ -14,6 +15,8 @@ namespace Formats::Resources::BYML {
 		virtual bool Parse() = 0;
 		virtual bool Serialize() = 0;
 		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) = 0;
+
+		virtual std::string ToYAML() = 0;
 
 		Formats::IO::Endianness mEndianness;
 		unsigned short mVersion;

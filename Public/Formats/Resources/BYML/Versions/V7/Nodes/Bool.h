@@ -11,8 +11,14 @@
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	class Bool : public Formats::Resources::BYML::Nodes::Bool, public Formats::Resources::BYML::Versions::V7::Node {
 	public:
+		Bool(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+
+		virtual bool GetValue() override;
+
+		virtual void EmitYAML(YAML::Emitter& out) override;
 
 		bool mValue;
 	};

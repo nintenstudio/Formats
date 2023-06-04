@@ -18,7 +18,13 @@
 
 #include <Formats/Resources/BYML/Versions/V7/NodeType.h>
 
+#include <yaml-cpp/yaml.h>
+
 namespace Formats::Resources::BYML::Versions::V7::Nodes {
+	Array::Array(Formats::Resources::BYML::Versions::V7::V7* parentBYML) : Formats::Resources::BYML::Versions::V7::Node::Node(parentBYML) {
+
+	}
+
 	bool Array::Parse(Formats::IO::BinaryIOStream& bStream) {
 		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::Array)
 			return false;
@@ -40,7 +46,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::Array: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Array> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Array>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Array> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Array>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
@@ -49,14 +55,14 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::BinaryData: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::BinaryData> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::BinaryData>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::BinaryData> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::BinaryData>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::Bool: {
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Bool> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Bool>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Bool> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Bool>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					break;
@@ -64,7 +70,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::Double: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Double> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Double>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Double> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Double>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
@@ -73,20 +79,20 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::FileData: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::FileData> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::FileData>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::FileData> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::FileData>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::Float: {
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Float> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Float>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Float> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Float>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::Int: {
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Int> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Int>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Int> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Int>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					break;
@@ -94,14 +100,14 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::Int64: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Int64> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Int64>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Int64> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Int64>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::Null: {
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Null> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Null>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::Null> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Null>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					break;
@@ -109,14 +115,14 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::PlainHash: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::String: {
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::String> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::String>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::String> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::String>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					break;
@@ -124,7 +130,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::StringHash: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringHash>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringHash>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
@@ -133,14 +139,14 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::StringTable: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
 					break;
 				}
 				case Formats::Resources::BYML::Versions::V7::NodeType::UInt: {
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::UInt> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::UInt>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::UInt> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::UInt>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					break;
@@ -148,7 +154,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::UInt64: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::UInt64> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::UInt64>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::UInt64> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::UInt64>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
@@ -157,7 +163,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 				case Formats::Resources::BYML::Versions::V7::NodeType::ValueHash: {
 					std::streampos offset = bStream.ReadU32();
 					bStream.PushSeek(offset);
-					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash>();
+					std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash> node = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash>(mParentBYML);
 					node->Parse(bStream);
 					mNodes.push_back(node);
 					bStream.PopSeek();
@@ -173,5 +179,22 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 
 		return true;
+	}
+
+	F_U32 Array::GetNodeCount() {
+		return mNodes.size();
+	}
+	std::shared_ptr<Formats::Resources::BYML::Node> Array::GetNode(F_U32 index) {
+		return mNodes.at(index);
+	}
+
+	void Array::EmitYAML(YAML::Emitter& out) {
+		out << YAML::BeginSeq;
+
+		for (std::shared_ptr<Formats::Resources::BYML::Node> node : mNodes) {
+			node->EmitYAML(out);
+		}
+
+		out << YAML::EndSeq;
 	}
 }
