@@ -16,6 +16,8 @@ namespace Formats::Resources::BYML {
 		virtual bool Serialize() = 0;
 		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) = 0;
 
+		virtual void SetStream(std::iostream* stream) override;
+
 		virtual std::string ToYAML() = 0;
 
 		Formats::IO::Endianness mEndianness;
@@ -24,6 +26,6 @@ namespace Formats::Resources::BYML {
 		std::shared_ptr<Formats::IO::BinaryIOStream> mBStream;
 	protected:
 		bool ParseBaseInfo();
-
+		bool WriteBaseInfo();
 	};
 }

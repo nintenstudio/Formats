@@ -5,6 +5,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType Double::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::Double;
+	}
+
 	bool Double::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadF64();
 

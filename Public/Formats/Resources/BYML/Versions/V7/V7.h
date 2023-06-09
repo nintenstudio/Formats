@@ -18,6 +18,6 @@ namespace Formats::Resources::BYML::Versions::V7 {
 
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mHashKeyTable;
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mStringTable;
-		std::shared_ptr<Formats::Resources::BYML::Node> mRoot;
+		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node> mRoot;
 	};
 }

@@ -1,6 +1,5 @@
 #include <Formats/Resources/BYML/BYML.h>
 
-#include <Formats/Resources/BYML/Versions/V4/V4.h>
 #include <Formats/Resources/BYML/Versions/V7/V7.h>
 
 #include <Formats/IO/BinaryIOStream_Versions/Little.h>
@@ -11,10 +10,6 @@ namespace Formats::Resources::BYML {
 		std::streampos startGPos = stream->tellg();
 		std::streampos startPPos = stream->tellp();
 
-		std::shared_ptr<Formats::Resources::BYML::Versions::V4::V4> v4 = std::make_shared<Formats::Resources::BYML::Versions::V4::V4>();
-		v4->SetStream(stream);
-		if (v4->Parse())
-			return v4;
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::V7> v7 = std::make_shared<Formats::Resources::BYML::Versions::V7::V7>();
 		v7->SetStream(stream);
 		if (v7->Parse())
@@ -23,6 +18,17 @@ namespace Formats::Resources::BYML {
 		stream->seekp(startPPos);
 
 		return nullptr;
+	}
+
+	void BYML::SetStream(std::iostream* stream) {
+		Formats::Resources::Resource::SetStream(stream);
+		
+		if (mEndianness == Formats::IO::Endianness::LITTLE) {
+			mBStream = std::make_shared<Formats::IO::BinaryIOStream_Versions::Little>(*mStream);
+		}
+		else {
+			mBStream = std::make_shared<Formats::IO::BinaryIOStream_Versions::Big>(*mStream);
+		}
 	}
 
 	bool BYML::ParseBaseInfo() {
@@ -42,6 +48,18 @@ namespace Formats::Resources::BYML {
 			return false;
 
 		mVersion = mBStream->ReadU16();
+
+		return true;
+	}
+	bool BYML::WriteBaseInfo() {
+		if (mEndianness == Formats::IO::Endianness::LITTLE) {
+			mStream->write("YB", 2);
+		}
+		else {
+			mStream->write("BY", 2);
+		}
+
+		mBStream->WriteU16(mVersion);
 
 		return true;
 	}

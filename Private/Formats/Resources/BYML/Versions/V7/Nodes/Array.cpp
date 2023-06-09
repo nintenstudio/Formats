@@ -25,6 +25,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType Array::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::Array;
+	}
+
 	bool Array::Parse(Formats::IO::BinaryIOStream& bStream) {
 		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::Array)
 			return false;
@@ -177,6 +181,118 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	bool Array::Serialize(Formats::IO::BinaryIOStream& bStream) {
 		bStream.WriteS8(Formats::Resources::BYML::Versions::V7::NodeType::Array);
 
+		bStream.WriteU24(mNodes.size());
+
+		for (std::vector<std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>>::iterator it = mNodes.begin(); it != mNodes.end(); ++it) {
+			bStream.WriteU8(it->get()->GetNodeType());
+		}
+
+		bStream.AlignSeek(4);
+
+		std::streampos nodeEnd = bStream.GetSeek() + (std::streampos)(0x4 * mNodes.size());
+
+		for (std::vector<std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>>::iterator it = mNodes.begin(); it != mNodes.end(); ++it) {
+			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = it->get()->GetNodeType();
+
+			switch (nodeType) {
+				case Formats::Resources::BYML::Versions::V7::NodeType::Array: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::BinaryData: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Bool: {
+					it->get()->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Double: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::FileData: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Float: {
+					it->get()->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Int: {
+					it->get()->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Int64: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Null: {
+					it->get()->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::PlainHash: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::String: {
+					it->get()->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::StringHash: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::StringTable: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::UInt: {
+					it->get()->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::UInt64: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::ValueHash: {
+					bStream.WriteU32(nodeEnd);
+					bStream.PushSeek(nodeEnd);
+					it->get()->Serialize(bStream);
+					nodeEnd = bStream.PopSeek();
+					break;
+				}
+			}
+		}
+
+		bStream.Seek(nodeEnd);
 
 		return true;
 	}

@@ -5,6 +5,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType Int64::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::Int64;
+	}
+
 	bool Int64::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadS64();
 

@@ -5,6 +5,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType Int::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::Int;
+	}
+
 	bool Int::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadS32();
 

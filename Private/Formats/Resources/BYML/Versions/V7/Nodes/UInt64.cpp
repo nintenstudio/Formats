@@ -5,6 +5,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType UInt64::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::UInt64;
+	}
+
 	bool UInt64::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadU64();
 

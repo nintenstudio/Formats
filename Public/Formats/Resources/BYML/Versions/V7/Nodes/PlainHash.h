@@ -14,6 +14,8 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	public:
 		PlainHash(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
 
+		virtual Formats::Resources::BYML::Versions::V7::NodeType::NodeType GetNodeType() const override;
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 
@@ -22,6 +24,6 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		virtual void EmitYAML(YAML::Emitter& out) override;
 
-		std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Node>> mMap;
+		std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mMap;
 	};
 }

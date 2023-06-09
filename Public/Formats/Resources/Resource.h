@@ -15,7 +15,7 @@ namespace Formats::Resources {
 		virtual bool Serialize() = 0;
 		virtual bool RequestParse(ResourceParsedCallback callback) = 0; // FORMATS_TODO_FUNCTIONAL Implement
 
-		void SetStream(std::iostream* stream) {
+		virtual void SetStream(std::iostream* stream) {
 			mStream = stream;
 		}
 	protected:

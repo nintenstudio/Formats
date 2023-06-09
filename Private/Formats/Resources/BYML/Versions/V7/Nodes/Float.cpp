@@ -4,6 +4,11 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	Float::Float(Formats::Resources::BYML::Versions::V7::V7* parentBYML) : Formats::Resources::BYML::Versions::V7::Node::Node(parentBYML) {
 
 	}
+
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType Float::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::Float;
+	}
+
 	bool Float::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadF32();
 

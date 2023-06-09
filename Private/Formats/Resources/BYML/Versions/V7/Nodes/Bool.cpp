@@ -5,6 +5,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType Bool::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::Bool;
+	}
+
 	bool Bool::Parse(Formats::IO::BinaryIOStream& bStream) {
 		mValue = bStream.ReadU32();
 

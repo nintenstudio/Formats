@@ -13,6 +13,8 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	public:
 		UInt(Formats::Resources::BYML::Versions::V7::V7* parentBYML);
 
+		virtual Formats::Resources::BYML::Versions::V7::NodeType::NodeType GetNodeType() const override;
+
 		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
 		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
 

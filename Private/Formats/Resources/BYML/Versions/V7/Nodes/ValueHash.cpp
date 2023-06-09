@@ -23,6 +23,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType ValueHash::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::ValueHash;
+	}
+
 	bool ValueHash::Parse(Formats::IO::BinaryIOStream& bStream) {
 		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::PlainHash)
 			return false;
@@ -174,6 +178,119 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return true;
 	}
 	bool ValueHash::Serialize(Formats::IO::BinaryIOStream& bStream) {
+		bStream.WriteU8(Formats::Resources::BYML::Versions::V7::NodeType::ValueHash);
+
+		bStream.WriteU24(mMap.size());
+
+		std::streampos childNodeStart = bStream.GetSeek() + (std::streampos)(12 * mMap.size());
+
+		for (std::pair<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> pair : mMap) {
+			Formats::Resources::BYML::Versions::V7::NodeType::NodeType nodeType = pair.second->GetNodeType();
+
+			bStream.PushSeek(bStream.GetSeek() + std::streampos(8 * mMap.size()));
+			bStream.WriteU8(pair.second->GetNodeType());
+			bStream.PopSeek();
+
+			switch (nodeType) {
+				case Formats::Resources::BYML::Versions::V7::NodeType::Array: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::BinaryData: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Bool: {
+					pair.second->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Double: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::FileData: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Float: {
+					pair.second->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Int: {
+					pair.second->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Int64: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::Null: {
+					pair.second->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::PlainHash: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::String: {
+					pair.second->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::StringHash: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::StringTable: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::UInt: {
+					pair.second->Serialize(bStream);
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::UInt64: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+				case Formats::Resources::BYML::Versions::V7::NodeType::ValueHash: {
+					bStream.WriteU32(childNodeStart);
+					bStream.PushSeek(childNodeStart);
+					pair.second->Serialize(bStream);
+					childNodeStart = bStream.PopSeek();
+					break;
+				}
+			}
+
+			bStream.WriteU32(pair.first);
+			bStream.WriteU32(mUkn0x8);
+		}
 
 		return true;
 	}
@@ -181,7 +298,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	std::vector<F_U32> ValueHash::GetKeys() {
 		std::vector<F_U32> res;
 		res.reserve(mMap.size());
-		for (std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Node>>::iterator it = mMap.begin(); it != mMap.end(); ++it) {
+		for (std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>>::iterator it = mMap.begin(); it != mMap.end(); ++it) {
 			res.push_back(it->first);
 		}
 
@@ -196,7 +313,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 	void ValueHash::EmitYAML(YAML::Emitter& out) {
 		out << YAML::BeginMap;
-		for (const std::pair<F_U32, std::shared_ptr<Formats::Resources::BYML::Node>> pair : mMap) {
+		for (const std::pair<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> pair : mMap) {
 			out << YAML::Key;
 			out << pair.first;
 			out << YAML::Value;

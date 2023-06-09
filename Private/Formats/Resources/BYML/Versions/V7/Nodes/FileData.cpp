@@ -8,6 +8,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		delete mData;
 	}
 
+	Formats::Resources::BYML::Versions::V7::NodeType::NodeType FileData::GetNodeType() const {
+		return Formats::Resources::BYML::Versions::V7::NodeType::FileData;
+	}
+
 	bool FileData::Parse(Formats::IO::BinaryIOStream& bStream) {
 		delete mData;
 

@@ -52,7 +52,7 @@ namespace Formats::IO {
 			return res;
 		}
 		inline void WriteZeroTerminatedString(std::string value) {
-			mStream << value.c_str();
+			mStream.write(value.c_str(), value.size() + 1);
 		}
 
 		virtual F_S8 ReadS8() = 0;
