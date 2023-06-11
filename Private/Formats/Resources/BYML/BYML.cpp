@@ -2,50 +2,35 @@
 
 #include <Formats/Resources/BYML/Versions/V7/V7.h>
 
-#include <Formats/IO/BinaryIOStream_Versions/Little.h>
-#include <Formats/IO/BinaryIOStream_Versions/Big.h>
-
 namespace Formats::Resources::BYML {
-	std::shared_ptr<BYML> BYML::Factory(std::iostream* stream) {
-		std::streampos startGPos = stream->tellg();
-		std::streampos startPPos = stream->tellp();
-
+	std::shared_ptr<BYML> BYML::Factory(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::V7> v7 = std::make_shared<Formats::Resources::BYML::Versions::V7::V7>();
 		v7->SetStream(stream);
 		if (v7->Parse())
 			return v7;
-		stream->seekg(startGPos);
-		stream->seekp(startPPos);
 
 		return nullptr;
 	}
 
-	void BYML::SetStream(std::iostream* stream) {
+	void BYML::SetStream(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
 		Formats::Resources::Resource::SetStream(stream);
 		
-		if (mEndianness == Formats::IO::Endianness::LITTLE) {
-			mBStream = std::make_shared<Formats::IO::BinaryIOStream_Versions::Little>(*mStream);
-		}
-		else {
-			mBStream = std::make_shared<Formats::IO::BinaryIOStream_Versions::Big>(*mStream);
-		}
+		mBStream = stream->Factory(mEndianness);
 	}
 
 	bool BYML::ParseBaseInfo() {
 		char signature[3];
-		mStream->read(signature, 2);
+		mStream->ReadBytes(&signature, 2);
 		signature[2] = '\0';
 
-		if (strcmp(signature, "YB") == 0) {
+		if (strcmp(signature, "YB") == 0)
 			mEndianness = Formats::IO::Endianness::LITTLE;
-			mBStream = std::make_shared<Formats::IO::BinaryIOStream_Versions::Little>(*mStream);
-		}
-		else if (strcmp(signature, "BY") == 0) {
+		else if (strcmp(signature, "BY") == 0)
 			mEndianness = Formats::IO::Endianness::BIG;
-			mBStream = std::make_shared<Formats::IO::BinaryIOStream_Versions::Big>(*mStream);
-		}
 		else
 			return false;
+
+		mBStream = mStream->Factory(mEndianness);
 
 		mVersion = mBStream->ReadU16();
 
@@ -53,10 +38,10 @@ namespace Formats::Resources::BYML {
 	}
 	bool BYML::WriteBaseInfo() {
 		if (mEndianness == Formats::IO::Endianness::LITTLE) {
-			mStream->write("YB", 2);
+			mStream->WriteBytes("YB", 2);
 		}
 		else {
-			mStream->write("BY", 2);
+			mStream->WriteBytes("BY", 2);
 		}
 
 		mBStream->WriteU16(mVersion);

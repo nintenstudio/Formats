@@ -10,13 +10,13 @@
 namespace Formats::Resources::BYML {
 	class BYML : public Formats::Resources::Resource {
 	public:
-		static std::shared_ptr<BYML> Factory(std::iostream* stream);
+		static std::shared_ptr<BYML> Factory(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream);
 
 		virtual bool Parse() = 0;
 		virtual bool Serialize() = 0;
 		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) = 0;
 
-		virtual void SetStream(std::iostream* stream) override;
+		virtual void SetStream(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) override;
 
 		virtual std::string ToYAML() = 0;
 
