@@ -12,7 +12,7 @@ namespace Formats::Resources::BYML::Versions::V7 {
 	public:
 		virtual bool Parse() override;
 		virtual bool Serialize() override;
-		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) override;
+		virtual bool RequestParse(Formats::ResourceParsedCallback callback) override;
 
 		virtual std::string ToYAML() override;
 

@@ -1,3 +1,6 @@
 [submodule "Lib/YAML-CPP"]
 	path = Lib/YAML-CPP
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "Lib/ZSTD"]
+	path = Lib/ZSTD
+	url = https://github.com/facebook/zstd.git

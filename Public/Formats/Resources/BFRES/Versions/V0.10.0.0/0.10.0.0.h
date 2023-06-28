@@ -7,6 +7,6 @@ namespace Formats::Resources::BFRES_Versions {
 	public:
 		virtual bool Parse() override;
 		virtual bool Serialize() override;
-		virtual bool RequestParse(Formats::Resources::ResourceParsedCallback callback) override;
+		virtual bool RequestParse(Formats::ResourceParsedCallback callback) override;
 	};
 }

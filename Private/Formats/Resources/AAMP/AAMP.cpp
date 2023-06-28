@@ -12,7 +12,7 @@ namespace Formats::Resources::AAMP {
 	bool AAMP::Serialize() {
 		return false;
 	}
-	bool AAMP::RequestParse(Formats::Resources::ResourceParsedCallback callback) {
+	bool AAMP::RequestParse(Formats::ResourceParsedCallback callback) {
 		return false;
 	}
 }

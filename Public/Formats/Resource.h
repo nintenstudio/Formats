@@ -3,7 +3,7 @@
 #include <Formats/IO/BinaryIOStreamBasic.h>
 #include <memory>
 
-namespace Formats::Resources {
+namespace Formats {
 	class Resource;
 	typedef void (*ResourceParsedCallback)(Resource* resource, bool success);
 

@@ -13,7 +13,7 @@ namespace Formats::Resources::BYML {
 	}
 
 	void BYML::SetStream(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
-		Formats::Resources::Resource::SetStream(stream);
+		Formats::Resource::SetStream(stream);
 		
 		mBStream = stream->Factory(mEndianness);
 	}

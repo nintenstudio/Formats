@@ -104,7 +104,7 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		return true;
 	}
 
-	bool V7::RequestParse(Formats::Resources::ResourceParsedCallback callback) {
+	bool V7::RequestParse(Formats::ResourceParsedCallback callback) {
 		return false;
 	}
 
