@@ -52,6 +52,6 @@ namespace Formats::IO {
 
 		virtual void ReadBytes(void* out, F_U32 size) = 0;
 
-		virtual void WriteBytes(void* in, F_U32 size) = 0;
+		virtual void WriteBytes(const void* in, F_U32 size) = 0;
 	};
 }

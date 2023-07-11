@@ -13,7 +13,7 @@ namespace Formats::IO {
 		virtual void ReadBytes(void* out, F_U32 length) = 0;
 		virtual void WriteBytes(const void* in, F_U32 length) = 0;
 
-		virtual F_U8* GetBuffer() = 0;
-		virtual F_U64 GetBufferLength() = 0;
+		virtual std::shared_ptr<F_U8> GetBuffer() = 0;
+		virtual F_UT GetBufferLength() = 0;
 	};
 }

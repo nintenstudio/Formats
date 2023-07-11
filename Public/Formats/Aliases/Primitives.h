@@ -15,6 +15,7 @@
 #define F_U24 Formats::Primitives::UInt24
 #define F_U32 uint32_t
 #define F_U64 uint64_t
+#define F_UT size_t
 
 #define F_F32 float
 #define F_F64 double
