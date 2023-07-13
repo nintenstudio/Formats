@@ -7,7 +7,7 @@
 namespace Formats::IO::BinaryIOStreams::Buffer {
 	class Big : public Formats::IO::BinaryIOStreams::Buffer::Buffer {
 	public:
-		Big(std::shared_ptr<F_U8> buffer, F_UT bufferSize) : Formats::IO::BinaryIOStreams::Buffer::Buffer(buffer, bufferSize) {
+		Big(std::shared_ptr<F_U8[]> buffer, F_UT bufferSize) : Formats::IO::BinaryIOStreams::Buffer::Buffer(buffer, bufferSize) {
 
 		}
 

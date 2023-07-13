@@ -5,7 +5,7 @@
 #include <cassert>
 
 namespace Formats::IO::BinaryIOStreamBasics::Buffer {
-    Buffer::Buffer(std::shared_ptr<F_U8> buffer, F_UT bufferSize) : mBuffer(buffer), mBufferSize(bufferSize), mSeek(0) {
+    Buffer::Buffer(std::shared_ptr<F_U8[]> buffer, F_UT bufferSize) : mBuffer(buffer), mBufferSize(bufferSize), mSeek(0) {
         
     }
     Buffer::Buffer(F_UT bufferSize) : mBuffer(new F_U8[bufferSize]), mBufferSize(bufferSize), mSeek(0) {
@@ -34,7 +34,7 @@ namespace Formats::IO::BinaryIOStreamBasics::Buffer {
         mSeek += length;
     }
 
-    std::shared_ptr<F_U8> Buffer::GetBuffer() {
+    std::shared_ptr<F_U8[]> Buffer::GetBuffer() {
         return mBuffer;
     }
     F_UT Buffer::GetBufferLength() {
