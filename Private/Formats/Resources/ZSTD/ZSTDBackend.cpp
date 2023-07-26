@@ -23,14 +23,16 @@ namespace Formats::Resources::ZSTD {
 		ZSTD_DCtx_reset(dctx, ZSTD_reset_session_and_parameters);
 		ZSTD_DCtx_setParameter(dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
 
-		F_U8* compressedBuffer = stream->GetBuffer().get();
+		std::shared_ptr<F_U8[]> compressedBuffer = stream->GetBuffer();
 		F_UT compressedBufferLength = stream->GetBufferLength();
-		F_UT frameContentSize = ZSTD_getFrameContentSize(compressedBuffer, compressedBufferLength);
+		F_UT frameContentSize = ZSTD_getFrameContentSize(compressedBuffer.get(), compressedBufferLength);
+		if (frameContentSize == ZSTD_CONTENTSIZE_ERROR)
+			return nullptr;
 		F_U8* decompressedBuffer = new F_U8[frameContentSize];
 
 		ZSTD_inBuffer inBuffer;
 		inBuffer.pos = 0;
-		inBuffer.src = compressedBuffer;
+		inBuffer.src = compressedBuffer.get();
 		inBuffer.size = compressedBufferLength;
 
 		ZSTD_outBuffer outBuffer;
@@ -49,20 +51,20 @@ namespace Formats::Resources::ZSTD {
 			}
 		}
 	
-		std::shared_ptr<Formats::IO::BinaryIOStreamBasic> res = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(std::shared_ptr<F_U8>(decompressedBuffer), frameContentSize);
+		std::shared_ptr<Formats::IO::BinaryIOStreamBasic> res = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(std::shared_ptr<F_U8[]>(decompressedBuffer), frameContentSize);
 		return res;
 	}
 	std::shared_ptr<Formats::IO::BinaryIOStreamBasic> ZSTDBackend::Compress(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
 		ZSTD_CCtx_reset(cctx, ZSTD_reset_session_and_parameters);
 
-		F_U8* decompressedBuffer = stream->GetBuffer().get();
+		std::shared_ptr<F_U8[]> decompressedBuffer = stream->GetBuffer();
 		F_UT decompressedBufferSize = stream->GetBufferLength();
 		F_U8* compressedBuffer = new F_U8[stream->GetBufferLength()];
 		F_UT compressedBufferSize = stream->GetBufferLength(); // ZSTD won't compress to larger than the input data.
 
 		ZSTD_inBuffer inBuffer;
 		inBuffer.pos = 0;
-		inBuffer.src = decompressedBuffer;
+		inBuffer.src = decompressedBuffer.get();
 		inBuffer.size = decompressedBufferSize;
 
 		ZSTD_outBuffer outBuffer;
@@ -73,7 +75,7 @@ namespace Formats::Resources::ZSTD {
 		while (inBuffer.pos < inBuffer.size)
 			ZSTD_compressStream2(cctx, &outBuffer, &inBuffer, ZSTD_e_continue);
 
-		std::shared_ptr<Formats::IO::BinaryIOStreamBasic> res = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(std::shared_ptr<F_U8>(compressedBuffer), compressedBufferSize);
+		std::shared_ptr<Formats::IO::BinaryIOStreamBasic> res = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(std::shared_ptr<F_U8[]>(compressedBuffer), compressedBufferSize);
 		return res;
 	}
 
@@ -85,5 +87,7 @@ namespace Formats::Resources::ZSTD {
 		ZSTD_CDict* cdict = ZSTD_createCDict(stream->GetBuffer().get(), stream->GetBufferLength(), compressionLevel);
 		ZSTD_CCtx_refCDict(cctx, cdict);
 		cdicts.push_back(cdict);
+
+		return true;
 	}
 }

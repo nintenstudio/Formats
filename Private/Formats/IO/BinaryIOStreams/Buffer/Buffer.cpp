@@ -1,7 +1,7 @@
 #include <Formats/IO/BinaryIOStreams/Buffer/Buffer.h>
 
 namespace Formats::IO::BinaryIOStreams::Buffer {
-    Buffer::Buffer(std::shared_ptr<F_U8> buffer, F_UT bufferSize) : mBuffer(buffer), mBufferSize(bufferSize), mSeek(0), mSeekStack() {
+    Buffer::Buffer(std::shared_ptr<F_U8[]> buffer, F_UT bufferSize) : mBuffer(buffer), mBufferSize(bufferSize), mSeek(0), mSeekStack() {
 
     }
 

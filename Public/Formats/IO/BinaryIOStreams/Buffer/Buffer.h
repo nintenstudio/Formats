@@ -18,7 +18,7 @@
 namespace Formats::IO::BinaryIOStreams::Buffer {
     class Buffer : public Formats::IO::BinaryIOStream {
     public:
-        Buffer(std::shared_ptr<F_U8> buffer, F_UT bufferSize);
+        Buffer(std::shared_ptr<F_U8[]> buffer, F_UT bufferSize);
 
         virtual void Seek(std::streampos pos) override;
 		virtual void PushSeek(std::streampos pos) override;
@@ -87,7 +87,7 @@ namespace Formats::IO::BinaryIOStreams::Buffer {
 		virtual void ReadBytesWithEndian(void* out, F_UT length) = 0;
 		virtual void WriteBytesWithEndian(void* in, F_UT length) = 0;
 
-		std::shared_ptr<F_U8> mBuffer;
+		std::shared_ptr<F_U8[]> mBuffer;
 		F_UT mBufferSize;
         std::streampos mSeek;
 		std::vector<std::streampos> mSeekStack;
