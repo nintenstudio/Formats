@@ -79,7 +79,7 @@ namespace Formats::Resources::ZSTD {
 		return res;
 	}
 
-	bool ZSTDBackend::AddDict(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream, F_U32 compressionLevel = 5) {
+	bool ZSTDBackend::AddDict(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream, F_U32 compressionLevel) {
 		ZSTD_DDict* ddict = ZSTD_createDDict(stream->GetBuffer().get(), stream->GetBufferLength());
 		ZSTD_DCtx_refDDict(dctx, ddict);
 		ddicts.push_back(ddict);
