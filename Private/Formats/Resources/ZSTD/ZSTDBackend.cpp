@@ -16,11 +16,13 @@ std::vector<ZSTD_CDict*> cdicts; // For freeing
 namespace Formats::Resources::ZSTD {
 	void ZSTDBackend::Init() {
 		dctx = ZSTD_createDCtx();
+		ZSTD_DCtx_setParameter(dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
+
 		cctx = ZSTD_createCCtx();
 	}
 
 	std::shared_ptr<Formats::IO::BinaryIOStreamBasic> ZSTDBackend::Decompress(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
-		ZSTD_DCtx_reset(dctx, ZSTD_reset_session_and_parameters);
+		ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only);
 		ZSTD_DCtx_setParameter(dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
 
 		std::shared_ptr<F_U8[]> compressedBuffer = stream->GetBuffer();
@@ -46,6 +48,7 @@ namespace Formats::Resources::ZSTD {
 				break; // We've decompressed successfully!
 			}
 			if (ZSTD_isError(status)) {
+				const char* errorName = ZSTD_getErrorName(status);
 				ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only);
 				return nullptr;
 			}
