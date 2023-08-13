@@ -2,12 +2,28 @@
 
 #include <Formats/Resources/TXTG/Versions/V0x11/V0x11.h>
 
+struct BlockDimX64
+        {
+            F_U64 width;
+            F_U64 height;
+            F_U64 depth;
+		};
+
+extern "C" void deswizzle_surface(F_U64 width, F_U64 height, F_U64 depth,
+            F_U8* source, F_U64 sourceLength,
+            F_U8* destination, F_U64 destinationLength,
+            BlockDimX64 blockDim, F_U64 blockHeightMip0, F_U64 bytesPerPixel,
+            F_U64 mipmapCount, F_U64 arrayCount);
+
 namespace Formats::Resources::TXTG {
 	std::shared_ptr<TXTG> TXTG::Factory(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
 		std::shared_ptr<Formats::Resources::TXTG::Versions::V0x11::V0x11> v0x11 = std::make_shared<Formats::Resources::TXTG::Versions::V0x11::V0x11>();
 		v0x11->SetStream(stream);
 		if (v0x11->Parse())
 			return v0x11;
+
+		// Test interop temporarily
+		//deswizzle_surface(0, 0, 0, 0, 0, 0, 0, BlockDimX64(), 0, 0, 0, 0);
 
 		return nullptr;
 	}

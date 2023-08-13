@@ -3,6 +3,8 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+include(FetchContent)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -35,3 +37,15 @@ set(ZSTD_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory("Lib/ZSTD/build/cmake")
 target_include_directories(Formats PRIVATE Lib/ZSTD/lib)
 target_link_libraries(Formats PRIVATE libzstd_static)
+
+#set(Rust_CARGO_TARGET "aarch64-nintendo-switch-freestanding")
+
+FetchContent_Declare(
+    Corrosion
+    GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+    GIT_TAG v0.4 # Optionally specify a commit hash, version tag or branch here
+)
+FetchContent_MakeAvailable(Corrosion)
+
+corrosion_import_crate(MANIFEST_PATH Lib/Tegra-Swizzle/Cargo.toml CRATES tegra_swizzle CRATE_TYPES staticlib FEATURES ffi FLAGS -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem)
+target_link_libraries(Formats PUBLIC tegra_swizzle)
