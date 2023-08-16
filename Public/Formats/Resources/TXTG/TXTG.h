@@ -3,6 +3,7 @@
 #include <Formats/Resource.h>
 
 #include <Formats/Resources/TXTG/Surface.h>
+#include <Formats/Texture/Format.h>
 #include <Formats/IO/BinaryIOStream.h>
 #include <Formats/IO/Endianness.h>
 
@@ -22,9 +23,10 @@ namespace Formats::Resources::TXTG {
 
 		virtual F_U16 GetWidth() = 0;
 		virtual F_U16 GetHeight() = 0;
-		virtual F_U16 GetArrayCount() = 0;
+		virtual F_U16 GetDepth() = 0;
 		virtual F_U8 GetMipCount() = 0;
 		virtual std::shared_ptr<Formats::Resources::TXTG::Surface> GetSurface(F_U16 arrayIndex, F_U8 mipLevel) = 0;
+		virtual Formats::Texture::Format GetFormat() = 0;
 
 		unsigned short mVersion;
 

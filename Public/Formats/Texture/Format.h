@@ -1,6 +1,8 @@
 #pragma once
 
-namespace Formats::Swizzling {
+#include <Formats/Aliases/Primitives.h>
+
+namespace Formats::Texture {
 
 	/// <summary>
 	/// Copied from https://github.com/KillzXGaming/Switch-Toolbox/blob/deeff8e9a9e76d0a0ce7e79d5a36d37937607341/Switch_Toolbox_Library/Generics/TEX_FORMAT.cs#L18
@@ -181,4 +183,12 @@ namespace Formats::Swizzling {
         RGB5A3 = 251,
         R5G5B5A1_UNORM = 252,
 	};
+
+    F_UT GetFormatBytesPerBlock(Format format);
+
+    F_UT GetFormatBlockWidth(Format format);
+
+    F_UT GetFormatBlockHeight(Format format);
+
+    F_UT GetFormatBlockDepth(Format format);
 }

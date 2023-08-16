@@ -16,14 +16,15 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 
 		virtual F_U16 GetWidth() override;
 		virtual F_U16 GetHeight() override;
-		virtual F_U16 GetArrayCount() override;
+		virtual F_U16 GetDepth() override;
 		virtual F_U8 GetMipCount() override;
 		virtual std::shared_ptr<Formats::Resources::TXTG::Surface> GetSurface(F_U16 arrayIndex, F_U8 mipLevel) override;
+		virtual Formats::Texture::Format GetFormat() override;
 
 	protected:
 		F_U16 mWidth;
 		F_U16 mHeight;
-		F_U16 mArrayCount;
+		F_U16 mDepth;
 		F_U8 mMipCount;
 		F_U8 mUnk1;
 		F_U8 mUnk2;

@@ -15,12 +15,17 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 		virtual std::shared_ptr<F_U8[]> GetData() override {
 			return mData;
 		}
+		virtual F_UT GetDataSize() override {
+			return mDataSize;
+		}
 
 		F_U16 mArrayIndex;
 		F_U8 mMipLevel;
 		F_U8 mSurfaceCount;
-		F_U32 mSize;
+		F_U32 mZSTDCompressedSize;
 		F_U32 mUnk;
+
 		std::shared_ptr<F_U8[]> mData;
+		F_UT mDataSize;
 	};
 }

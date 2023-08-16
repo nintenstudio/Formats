@@ -5,25 +5,51 @@
 #define ZSTD_STATIC_LINKING_ONLY
 #include <zstd.h>
 #include <zdict.h>
+#include <map>
 #include <vector>
+#include <shared_mutex>
+#include <thread>
 
-ZSTD_DCtx* dctx = nullptr;
-ZSTD_CCtx* cctx = nullptr;
+struct ThreadData {
+	ZSTD_DCtx* dctx = nullptr;
+	ZSTD_CCtx* cctx = nullptr;
+};
+std::map<std::thread::id, ThreadData> threadData; std::shared_mutex threadDataMutex;
+ThreadData* GetThreadData() {
+	return &threadData.at(std::this_thread::get_id());
+}
 
-std::vector<ZSTD_DDict*> ddicts; // For freeing
-std::vector<ZSTD_CDict*> cdicts; // For freeing
+std::vector<ZSTD_DDict*> ddicts; std::shared_mutex ddictMutex; // For freeing
+std::vector<ZSTD_CDict*> cdicts; std::shared_mutex cdictMutex; // For freeing
 
 namespace Formats::Resources::ZSTD {
-	void ZSTDBackend::Init() {
-		dctx = ZSTD_createDCtx();
-		ZSTD_DCtx_setParameter(dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
+	void ZSTDBackend::InitThread() {
+		if (!threadData.count(std::this_thread::get_id())) {
+			threadData.insert({ std::this_thread::get_id(), ThreadData() });
 
-		cctx = ZSTD_createCCtx();
+			GetThreadData()->dctx = ZSTD_createDCtx();
+			ZSTD_DCtx_setParameter(GetThreadData()->dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
+
+			GetThreadData()->cctx = ZSTD_createCCtx();
+		}
+
+		{
+			std::shared_lock<std::shared_mutex> lock(ddictMutex);
+			for (ZSTD_DDict* ddict : ddicts)
+				ZSTD_DCtx_refDDict(GetThreadData()->dctx, ddict);
+		}
+		{
+			std::shared_lock<std::shared_mutex> lock(cdictMutex);
+			for (ZSTD_CDict* cdict : cdicts)
+				ZSTD_CCtx_refCDict(GetThreadData()->cctx, cdict);
+		}
 	}
 
 	std::shared_ptr<Formats::IO::BinaryIOStreamBasic> ZSTDBackend::Decompress(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
-		ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only);
-		ZSTD_DCtx_setParameter(dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
+		InitThread();
+
+		ZSTD_DCtx_reset(GetThreadData()->dctx, ZSTD_reset_session_only);
+		ZSTD_DCtx_setParameter(GetThreadData()->dctx, ZSTD_d_refMultipleDDicts, ZSTD_rmd_refMultipleDDicts);
 
 		std::shared_ptr<F_U8[]> compressedBuffer = stream->GetBuffer();
 		F_UT compressedBufferLength = stream->GetBufferLength();
@@ -43,13 +69,13 @@ namespace Formats::Resources::ZSTD {
 		outBuffer.size = frameContentSize;
 
 		while (true) {
-			size_t status = ZSTD_decompressStream(dctx, &outBuffer, &inBuffer);
+			size_t status = ZSTD_decompressStream(GetThreadData()->dctx, &outBuffer, &inBuffer);
 			if (status == 0) {
 				break; // We've decompressed successfully!
 			}
 			if (ZSTD_isError(status)) {
 				const char* errorName = ZSTD_getErrorName(status);
-				ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only);
+				ZSTD_DCtx_reset(GetThreadData()->dctx, ZSTD_reset_session_only);
 				return nullptr;
 			}
 		}
@@ -58,7 +84,9 @@ namespace Formats::Resources::ZSTD {
 		return res;
 	}
 	std::shared_ptr<Formats::IO::BinaryIOStreamBasic> ZSTDBackend::Compress(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
-		ZSTD_CCtx_reset(cctx, ZSTD_reset_session_and_parameters);
+		InitThread();
+
+		ZSTD_CCtx_reset(GetThreadData()->cctx, ZSTD_reset_session_and_parameters);
 
 		std::shared_ptr<F_U8[]> decompressedBuffer = stream->GetBuffer();
 		F_UT decompressedBufferSize = stream->GetBufferLength();
@@ -76,20 +104,21 @@ namespace Formats::Resources::ZSTD {
 		outBuffer.size = compressedBufferSize;
 
 		while (inBuffer.pos < inBuffer.size)
-			ZSTD_compressStream2(cctx, &outBuffer, &inBuffer, ZSTD_e_continue);
+			ZSTD_compressStream2(GetThreadData()->cctx, &outBuffer, &inBuffer, ZSTD_e_continue);
 
 		std::shared_ptr<Formats::IO::BinaryIOStreamBasic> res = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(std::shared_ptr<F_U8[]>(compressedBuffer), compressedBufferSize);
 		return res;
 	}
 
 	bool ZSTDBackend::AddDict(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream, F_U32 compressionLevel) {
-		ZSTD_DDict* ddict = ZSTD_createDDict(stream->GetBuffer().get(), stream->GetBufferLength());
-		ZSTD_DCtx_refDDict(dctx, ddict);
-		ddicts.push_back(ddict);
-
-		ZSTD_CDict* cdict = ZSTD_createCDict(stream->GetBuffer().get(), stream->GetBufferLength(), compressionLevel);
-		ZSTD_CCtx_refCDict(cctx, cdict);
-		cdicts.push_back(cdict);
+		{
+			std::unique_lock<std::shared_mutex> lock(ddictMutex);
+			ddicts.push_back(ZSTD_createDDict(stream->GetBuffer().get(), stream->GetBufferLength()));
+		}
+		{
+			std::unique_lock<std::shared_mutex> lock(cdictMutex);
+			cdicts.push_back(ZSTD_createCDict(stream->GetBuffer().get(), stream->GetBufferLength(), compressionLevel));
+		}
 
 		return true;
 	}
