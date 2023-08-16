@@ -7,3 +7,6 @@
 [submodule "Lib/Tegra-Swizzle"]
 	path = Lib/Tegra-Swizzle
 	url = https://github.com/nintenstudio/tegra_swizzle.git
+[submodule "Lib/CTegra-Swizzle"]
+	path = Lib/CTegra-Swizzle
+	url = https://github.com/nintenstudio/CTegra-Swizzle.git
