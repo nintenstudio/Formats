@@ -6,8 +6,6 @@
 namespace Formats::Resources::ZSTD {
 	class ZSTDBackend {
 	public:
-		
-
 		static std::shared_ptr<Formats::IO::BinaryIOStreamBasic> Decompress(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream);
 		static std::shared_ptr<Formats::IO::BinaryIOStreamBasic> Compress(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream);
 

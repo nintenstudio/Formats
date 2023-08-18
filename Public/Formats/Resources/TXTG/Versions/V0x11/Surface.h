@@ -19,6 +19,13 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 			return mDataSize;
 		}
 
+		virtual F_U32 GetWidth() override {
+			return mWidth;
+		}
+		virtual F_U32 GetHeight() override {
+			return mHeight;
+		}
+
 		F_U16 mArrayIndex;
 		F_U8 mMipLevel;
 		F_U8 mSurfaceCount;
@@ -27,5 +34,8 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 
 		std::shared_ptr<F_U8[]> mData;
 		F_UT mDataSize;
+
+		F_U32 mWidth;
+		F_U32 mHeight;
 	};
 }

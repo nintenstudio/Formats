@@ -61,40 +61,56 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 			mSurfaces.at(i)->mZSTDCompressedSize = mBStream->ReadU32();
 			mSurfaces.at(i)->mUnk = mBStream->ReadU32();
 		}
-		for (F_U32 i = 0; i < 1; i++){// i < mMipCount * mDepth; i++) {
+
+		Formats::Texture::Format format = GetFormat();
+		F_UT blockWidth = Formats::Texture::GetFormatBlockWidth(format);
+		F_UT blockHeight = Formats::Texture::GetFormatBlockHeight(format);
+		F_UT blockDepth = Formats::Texture::GetFormatBlockDepth(format);
+		F_UT bytesPerBlock = Formats::Texture::GetFormatBytesPerBlock(format);
+		BlockHeight blockHeightMip0 = block_height_mip0(div_round_up(mHeight, blockHeight));
+
+		for (F_U32 i = 0; i < mMipCount * mDepth; i++) {
 			std::shared_ptr<F_U8[]> compressedSurface = std::shared_ptr<F_U8[]>(new F_U8[mSurfaces.at(i)->mZSTDCompressedSize]);
 			mBStream->ReadBytes(compressedSurface.get(), mSurfaces.at(i)->mZSTDCompressedSize);
+
 			std::shared_ptr<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer> compressedSurfaceStream = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(compressedSurface, mSurfaces.at(i)->mZSTDCompressedSize);
 
 			std::shared_ptr<Formats::IO::BinaryIOStreamBasic> swizzledSurfaceDataStream = Formats::Resources::ZSTD::ZSTDBackend::Decompress(compressedSurfaceStream);
 			std::shared_ptr<F_U8[]> swizzledSurfaceData = swizzledSurfaceDataStream->GetBuffer();
-			std::vector<F_U8> swizzledSurfaceDataVec = std::vector<F_U8>(&swizzledSurfaceData[0], &swizzledSurfaceData[swizzledSurfaceDataStream->GetBufferLength()]);
-
-			Formats::Texture::Format format = GetFormat();
-			F_UT blockWidth = Formats::Texture::GetFormatBlockWidth(format);
-			F_UT blockHeight = Formats::Texture::GetFormatBlockHeight(format);
-			F_UT blockDepth = Formats::Texture::GetFormatBlockDepth(format);
 
 			F_UT mipWidth = std::max(1, mWidth >> mSurfaces.at(i)->mMipLevel);
 			F_UT mipHeight = std::max(1, mHeight >> mSurfaces.at(i)->mMipLevel);
 			F_UT mipDepth = std::max(1, mDepth >> mSurfaces.at(i)->mMipLevel);
+			BlockHeight mipBlockHeight = mip_block_height(div_round_up(mipHeight, blockHeight), blockHeightMip0);
 
-			BlockHeight mipBlockHeight = mip_block_height(div_round_up(mipHeight, blockHeight), block_height_from_value(div_round_up(div_round_up(mipHeight, blockHeight), GOB_HEIGHT_IN_BYTES)));
+			mSurfaces.at(i)->mWidth = mipWidth;
+			mSurfaces.at(i)->mHeight = mipHeight;
 
-			std::vector<F_U8> deswizzledSurfaceData = deswizzle_block_linear(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), swizzledSurfaceDataVec, mipBlockHeight, Formats::Texture::GetFormatBytesPerBlock(format));
-			mSurfaces.at(i)->mData = std::shared_ptr<F_U8[]>(deswizzledSurfaceData.data());
-			mSurfaces.at(i)->mDataSize = deswizzled_mip_size(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), Formats::Texture::GetFormatBytesPerBlock(format));
+			// When swizzled data takes up less than a block height, tegra_swizzle gets mad.
+			// Here just allocate what it expects to find into a new array and copy to that.
+			// There's likely a better solution than this, but none that I've found.
+			F_UT swizzledSurfaceDataExpandedSize = swizzled_mip_size(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), mipBlockHeight, bytesPerBlock);
+			std::shared_ptr<F_U8[]> swizzledSurfaceDataExpanded = std::shared_ptr<F_U8[]>(new F_U8[swizzledSurfaceDataExpandedSize]);
+			std::memcpy(swizzledSurfaceDataExpanded.get(), swizzledSurfaceData.get(), swizzledSurfaceDataExpandedSize);
+
+			F_U8* deswizzledSurfaceData;
+			F_UT deswizzledSurfaceDataSize;
+			deswizzle_block_linear(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), swizzledSurfaceDataExpanded.get(), swizzledSurfaceDataExpandedSize, mipBlockHeight, bytesPerBlock, &deswizzledSurfaceData, &deswizzledSurfaceDataSize);
+			mSurfaces.at(i)->mData = std::shared_ptr<F_U8[]>(deswizzledSurfaceData);
+			mSurfaces.at(i)->mDataSize = deswizzled_mip_size(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), bytesPerBlock);
 			
 			std::ofstream outfile("TEST.bin", std::ios::out | std::ios::binary);
-			outfile.write((const char*)&deswizzledSurfaceData[0], deswizzledSurfaceData.size());
+			outfile.write((const char*)&deswizzledSurfaceData[0], deswizzledSurfaceDataSize);
 		
 		}
+
+		return true;
 	}
 	bool V0x11::Serialize() {
 		if (!Formats::Resources::TXTG::TXTG::WriteBaseInfo())
 			return false;
 
-
+		return true;
 	}
 
 	bool V0x11::RequestParse(Formats::ResourceParsedCallback callback) {

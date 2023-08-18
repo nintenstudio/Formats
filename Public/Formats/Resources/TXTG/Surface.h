@@ -8,5 +8,7 @@ namespace Formats::Resources::TXTG {
 	public:
 		virtual std::shared_ptr<F_U8[]> GetData() = 0;
 		virtual F_UT GetDataSize() = 0;
+		virtual F_U32 GetWidth() = 0;
+		virtual F_U32 GetHeight() = 0;
 	};
 }
