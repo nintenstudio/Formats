@@ -4,7 +4,7 @@
 
 #include <Formats/Resources/TXTG/Surface.h>
 #include <Formats/Texture/Format.h>
-#include <Formats/IO/BinaryIOStream.h>
+#include <Formats/IO/Stream.h>
 #include <Formats/IO/Endianness.h>
 
 #include <string>
@@ -13,13 +13,13 @@
 namespace Formats::Resources::TXTG {
 	class TXTG : public Formats::Resource {
 	public:
-		static std::shared_ptr<TXTG> Factory(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream);
+		static std::shared_ptr<TXTG> Factory(std::shared_ptr<Formats::IO::Stream> stream);
 
 		virtual bool Parse() = 0;
 		virtual bool Serialize() = 0;
 		virtual bool RequestParse(Formats::ResourceParsedCallback callback) = 0;
 
-		virtual void SetStream(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) override;
+		virtual void SetStream(std::shared_ptr<Formats::IO::Stream> stream) override;
 
 		virtual F_U16 GetWidth() = 0;
 		virtual F_U16 GetHeight() = 0;
@@ -29,8 +29,6 @@ namespace Formats::Resources::TXTG {
 		virtual Formats::Texture::Format GetFormat() = 0;
 
 		unsigned short mVersion;
-
-		std::shared_ptr<Formats::IO::BinaryIOStream> mBStream;
 	protected:
 		bool ParseBaseInfo();
 		bool WriteBaseInfo();

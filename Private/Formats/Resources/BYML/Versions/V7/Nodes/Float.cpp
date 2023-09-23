@@ -9,12 +9,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::Float;
 	}
 
-	bool Float::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool Float::Parse(Formats::IO::Stream& bStream) {
 		mValue = bStream.ReadF32();
 
 		return true;
 	}
-	bool Float::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool Float::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteF32(mValue);
 
 		return true;

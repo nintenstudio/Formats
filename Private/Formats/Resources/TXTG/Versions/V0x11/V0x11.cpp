@@ -1,7 +1,7 @@
 #include <Formats/Resources/TXTG/Versions/V0x11/V0x11.h>
 
 #include <Formats/Resources/ZSTD/ZSTDBackend.h>
-#include <Formats/IO/BinaryIOStreamBasics/Buffer/Buffer.h>
+#include <Formats/IO/Streams/Buffer/Buffer.h>
 
 #include <tegra_swizzle/lib.h>
 #include <algorithm>
@@ -24,45 +24,47 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 			return false;
 #endif
 
-		mWidth = mBStream->ReadU16();
-		mHeight = mBStream->ReadU16();
-		mDepth = mBStream->ReadU16();
-		mMipCount = mBStream->ReadU8();
-		mUnk1 = mBStream->ReadU8();
-		mUnk2 = mBStream->ReadU8();
-		mBStream->ReadU16(); // Padding
+		mWidth = mStream->ReadU16();
+		mHeight = mStream->ReadU16();
+		mDepth = mStream->ReadU16();
+		mMipCount = mStream->ReadU8();
+		mUnk1 = mStream->ReadU8();
+		mUnk2 = mStream->ReadU8();
+		mStream->ReadU16(); // Padding
 
-		mFormatFlag = mBStream->ReadU8();
-		mFormatSetting = mBStream->ReadU32();
+		mFormatFlag = mStream->ReadU8();
+		mFormatSetting = mStream->ReadU32();
 
-		mCompSelectR = mBStream->ReadU8();
-		mCompSelectG = mBStream->ReadU8();
-		mCompSelectB = mBStream->ReadU8();
-		mCompSelectA = mBStream->ReadU8();
+		mCompSelectR = mStream->ReadU8();
+		mCompSelectG = mStream->ReadU8();
+		mCompSelectB = mStream->ReadU8();
+		mCompSelectA = mStream->ReadU8();
 
-		mBStream->ReadBytes(&mHash[0], 32);
+		mStream->ReadBytes(&mHash[0], 32);
 
-		mFormat = mBStream->ReadU16();
-		mUnk3 = mBStream->ReadU16();
+		mFormat = mStream->ReadU16();
+		mUnk3 = mStream->ReadU16();
 
-		mTextureSetting1 = mBStream->ReadU32();
-		mTextureSetting2 = mBStream->ReadU32();
-		mTextureSetting3 = mBStream->ReadU32();
-		mTextureSetting4 = mBStream->ReadU32();
+		mTextureSetting1 = mStream->ReadU32();
+		mTextureSetting2 = mStream->ReadU32();
+		mTextureSetting3 = mStream->ReadU32();
+		mTextureSetting4 = mStream->ReadU32();
 
 		mSurfaces.reserve(mMipCount * mDepth);
 		for (F_U32 i = 0; i < mMipCount * mDepth; i++) {
-			F_U16 arrayIndex = mBStream->ReadU16();
-			F_U8 mipLevel = mBStream->ReadU8();
-			F_U8 surfaceCount = mBStream->ReadU8();
+			F_U16 arrayIndex = mStream->ReadU16();
+			F_U8 mipLevel = mStream->ReadU8();
+			F_U8 surfaceCount = mStream->ReadU8();
 			mSurfaces.push_back(std::make_shared<Formats::Resources::TXTG::Versions::V0x11::Surface>(arrayIndex, mipLevel, surfaceCount));
 		}
 		for (F_U32 i = 0; i < mMipCount * mDepth; i++) {
-			mSurfaces.at(i)->mZSTDCompressedSize = mBStream->ReadU32();
-			mSurfaces.at(i)->mUnk = mBStream->ReadU32();
+			mSurfaces.at(i)->mZSTDCompressedSize = mStream->ReadU32();
+			mSurfaces.at(i)->mUnk = mStream->ReadU32();
 		}
 
 		Formats::Texture::Format format = GetFormat();
+		if (format == Formats::Texture::Format::UNKNOWN)
+			return false;
 		F_UT blockWidth = Formats::Texture::GetFormatBlockWidth(format);
 		F_UT blockHeight = Formats::Texture::GetFormatBlockHeight(format);
 		F_UT blockDepth = Formats::Texture::GetFormatBlockDepth(format);
@@ -71,11 +73,11 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 
 		for (F_U32 i = 0; i < mMipCount * mDepth; i++) {
 			std::shared_ptr<F_U8[]> compressedSurface = std::shared_ptr<F_U8[]>(new F_U8[mSurfaces.at(i)->mZSTDCompressedSize]);
-			mBStream->ReadBytes(compressedSurface.get(), mSurfaces.at(i)->mZSTDCompressedSize);
+			mStream->ReadBytes(compressedSurface.get(), mSurfaces.at(i)->mZSTDCompressedSize);
 
-			std::shared_ptr<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer> compressedSurfaceStream = std::make_shared<Formats::IO::BinaryIOStreamBasics::Buffer::Buffer>(compressedSurface, mSurfaces.at(i)->mZSTDCompressedSize);
+			std::shared_ptr<Formats::IO::Streams::Buffer::Buffer> compressedSurfaceStream = std::make_shared<Formats::IO::Streams::Buffer::Buffer>(compressedSurface, mSurfaces.at(i)->mZSTDCompressedSize);
 
-			std::shared_ptr<Formats::IO::BinaryIOStreamBasic> swizzledSurfaceDataStream = Formats::Resources::ZSTD::ZSTDBackend::Decompress(compressedSurfaceStream);
+			std::shared_ptr<Formats::IO::Stream> swizzledSurfaceDataStream = Formats::Resources::ZSTD::ZSTDBackend::Decompress(compressedSurfaceStream);
 			std::shared_ptr<F_U8[]> swizzledSurfaceData = swizzledSurfaceDataStream->GetBuffer();
 
 			F_UT mipWidth = std::max(1, mWidth >> mSurfaces.at(i)->mMipLevel);

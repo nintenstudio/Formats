@@ -27,7 +27,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::StringHash;
 	}
 
-	bool StringHash::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool StringHash::Parse(Formats::IO::Stream& bStream) {
 		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringHash)
 			return false;
 
@@ -169,7 +169,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		return true;
 	}
-	bool StringHash::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool StringHash::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteU8(Formats::Resources::BYML::Versions::V7::NodeType::StringHash);
 
 		bStream.WriteU24(mMap.size());

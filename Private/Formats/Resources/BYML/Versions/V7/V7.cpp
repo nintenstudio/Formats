@@ -23,46 +23,46 @@ namespace Formats::Resources::BYML::Versions::V7 {
 			return false;
 #endif
 
-		F_U32 hashKeyTablePos = mBStream->ReadU32();
+		F_U32 hashKeyTablePos = mStream->ReadU32();
 		if (hashKeyTablePos != 0) {
-			mBStream->PushSeek(hashKeyTablePos);
+			mStream->PushSeek(hashKeyTablePos);
 			mHashKeyTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>(this);
-			assert(mHashKeyTable->Parse(*mBStream));
-			mBStream->PopSeek();
+			assert(mHashKeyTable->Parse(*mStream));
+			mStream->PopSeek();
 		}
 
-		F_U32 stringTablePos = mBStream->ReadU32();
+		F_U32 stringTablePos = mStream->ReadU32();
 		if (stringTablePos != 0) {
-			mBStream->PushSeek(stringTablePos);
+			mStream->PushSeek(stringTablePos);
 			mStringTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>(this);
-			assert(mStringTable->Parse(*mBStream));
-			mBStream->PopSeek();
+			assert(mStringTable->Parse(*mStream));
+			mStream->PopSeek();
 		}
 		
-		F_U32 rootNodePos = mBStream->ReadU32();
+		F_U32 rootNodePos = mStream->ReadU32();
 		if (rootNodePos != 0) {
-			mBStream->PushSeek(rootNodePos);
+			mStream->PushSeek(rootNodePos);
 			mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::Array>(this);
-			if (mRoot->Parse(*mBStream)) {
-				mBStream->PopSeek();
+			if (mRoot->Parse(*mStream)) {
+				mStream->PopSeek();
 				return true;
 			}
-			mBStream->Seek(rootNodePos);
+			mStream->Seek(rootNodePos);
 			mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::PlainHash>(this);
-			if (mRoot->Parse(*mBStream)) {
-				mBStream->PopSeek();
+			if (mRoot->Parse(*mStream)) {
+				mStream->PopSeek();
 				return true;
 			}
-			mBStream->Seek(rootNodePos);
+			mStream->Seek(rootNodePos);
 			mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::ValueHash>(this);
-			if (mRoot->Parse(*mBStream)) {
-				mBStream->PopSeek();
+			if (mRoot->Parse(*mStream)) {
+				mStream->PopSeek();
 				return true;
 			}
-			mBStream->Seek(rootNodePos);
+			mStream->Seek(rootNodePos);
 			mRoot = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringHash>(this);
-			if (mRoot->Parse(*mBStream)) {
-				mBStream->PopSeek();
+			if (mRoot->Parse(*mStream)) {
+				mStream->PopSeek();
 				return true;
 			}
 		}
@@ -76,30 +76,30 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		if (!Formats::Resources::BYML::BYML::WriteBaseInfo())
 			return false;
 
-		std::streampos offsetsPos = mBStream->GetSeek();
-		mBStream->Seek(offsetsPos + (std::streampos)12);
+		std::streampos offsetsPos = mStream->GetSeek();
+		mStream->Seek(offsetsPos + (std::streampos)12);
 
 		std::streampos hashKeyTablePos = 0;
 		if (mHashKeyTable != nullptr) {
-			hashKeyTablePos = mBStream->GetSeek();
-			mHashKeyTable->Serialize(*mBStream);
+			hashKeyTablePos = mStream->GetSeek();
+			mHashKeyTable->Serialize(*mStream);
 		}
 		std::streampos stringTablePos = 0;
 		if (mStringTable != nullptr) {
-			stringTablePos = mBStream->GetSeek();
-			mStringTable->Serialize(*mBStream);
+			stringTablePos = mStream->GetSeek();
+			mStringTable->Serialize(*mStream);
 		}
 		std::streampos rootPos = 0;
 		if (mRoot != nullptr) {
-			rootPos = mBStream->GetSeek();
-			mRoot->Serialize(*mBStream);
+			rootPos = mStream->GetSeek();
+			mRoot->Serialize(*mStream);
 		}
 
-		mBStream->PushSeek(offsetsPos);
-		mBStream->WriteU32(hashKeyTablePos);
-		mBStream->WriteU32(stringTablePos);
-		mBStream->WriteU32(rootPos);
-		mBStream->PopSeek();
+		mStream->PushSeek(offsetsPos);
+		mStream->WriteU32(hashKeyTablePos);
+		mStream->WriteU32(stringTablePos);
+		mStream->WriteU32(rootPos);
+		mStream->PopSeek();
 
 		return true;
 	}

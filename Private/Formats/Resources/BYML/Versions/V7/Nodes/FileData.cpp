@@ -12,7 +12,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::FileData;
 	}
 
-	bool FileData::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool FileData::Parse(Formats::IO::Stream& bStream) {
 		delete mData;
 
 		mDataSize = bStream.ReadU32();
@@ -23,7 +23,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		return true;
 	}
-	bool FileData::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool FileData::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteU32(mDataSize);
 		bStream.WriteU32(mUkn0x4);
 

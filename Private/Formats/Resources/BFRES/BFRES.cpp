@@ -10,7 +10,7 @@ namespace Formats::Resources::BFRES {
 		char signature[4];
 		mStream->ReadBytes(signature, 4);
 
-		if (signature != "FRES")
+		if (strcmp(signature, "FRES") != 0)
 			return false;
 
 		unsigned int rawVersion;

@@ -9,12 +9,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::Double;
 	}
 
-	bool Double::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool Double::Parse(Formats::IO::Stream& bStream) {
 		mValue = bStream.ReadF64();
 
 		return true;
 	}
-	bool Double::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool Double::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteF64(mValue);
 
 		return true;

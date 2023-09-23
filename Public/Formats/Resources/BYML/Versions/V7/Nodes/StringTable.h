@@ -15,8 +15,8 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		virtual Formats::Resources::BYML::Versions::V7::NodeType::NodeType GetNodeType() const override;
 
-		virtual bool Parse(Formats::IO::BinaryIOStream& bStream) override;
-		virtual bool Serialize(Formats::IO::BinaryIOStream& bStream) override;
+		virtual bool Parse(Formats::IO::Stream& bStream) override;
+		virtual bool Serialize(Formats::IO::Stream& bStream) override;
 
 		virtual void EmitYAML(YAML::Emitter& out) override;
 

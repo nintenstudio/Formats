@@ -3,7 +3,7 @@
 #include <Formats/Resources/BYML/Versions/V7/V7.h>
 
 namespace Formats::Resources::BYML {
-	std::shared_ptr<BYML> BYML::Factory(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
+	std::shared_ptr<BYML> BYML::Factory(std::shared_ptr<Formats::IO::Stream> stream) {
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::V7> v7 = std::make_shared<Formats::Resources::BYML::Versions::V7::V7>();
 		v7->SetStream(stream);
 		if (v7->Parse())
@@ -12,10 +12,10 @@ namespace Formats::Resources::BYML {
 		return nullptr;
 	}
 
-	void BYML::SetStream(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
+	void BYML::SetStream(std::shared_ptr<Formats::IO::Stream> stream) {
 		Formats::Resource::SetStream(stream);
 		
-		mBStream = stream->Factory(mEndianness);
+		mStream->SetEndianness(mEndianness);
 	}
 
 	bool BYML::ParseBaseInfo() {
@@ -30,9 +30,9 @@ namespace Formats::Resources::BYML {
 		else
 			return false;
 
-		mBStream = mStream->Factory(mEndianness);
+		mStream->SetEndianness(mEndianness);
 
-		mVersion = mBStream->ReadU16();
+		mVersion = mStream->ReadU16();
 
 		return true;
 	}
@@ -44,7 +44,7 @@ namespace Formats::Resources::BYML {
 			mStream->WriteBytes("BY", 2);
 		}
 
-		mBStream->WriteU16(mVersion);
+		mStream->SetEndianness(mEndianness);
 
 		return true;
 	}

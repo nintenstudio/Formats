@@ -9,12 +9,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::Int;
 	}
 
-	bool Int::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool Int::Parse(Formats::IO::Stream& bStream) {
 		mValue = bStream.ReadS32();
 
 		return true;
 	}
-	bool Int::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool Int::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteS32(mValue);
 
 		return true;

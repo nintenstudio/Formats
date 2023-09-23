@@ -29,7 +29,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::Array;
 	}
 
-	bool Array::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool Array::Parse(Formats::IO::Stream& bStream) {
 		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::Array)
 			return false;
 
@@ -178,7 +178,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		return true;
 	}
-	bool Array::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool Array::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteS8(Formats::Resources::BYML::Versions::V7::NodeType::Array);
 
 		bStream.WriteU24(mNodes.size());

@@ -1,6 +1,11 @@
-#include <Formats/IO/BinaryIOStreams/Buffer/Buffer.h>
+#include <Formats/IO/Streams/Buffer/Buffer.h>
 
-namespace Formats::IO::BinaryIOStreams::Buffer {
+#include <Formats/IO/Streams/Buffer/EndianReaders/Little.h>
+#include <Formats/IO/Streams/Buffer/EndianReaders/Big.h>
+
+#include <cassert>
+
+namespace Formats::IO::Streams::Buffer {
     Buffer::Buffer(std::shared_ptr<F_U8[]> buffer, F_UT bufferSize) : mBuffer(buffer), mBufferSize(bufferSize), mSeek(0), mSeekStack() {
 
     }
@@ -40,16 +45,36 @@ namespace Formats::IO::BinaryIOStreams::Buffer {
 		WriteBytes(reinterpret_cast<const void*>(value.c_str()), value.size() + 1);
 	}
 
+    void Buffer::SetEndianness(Formats::IO::Endianness endianness) {
+        switch (endianness) {
+            case Formats::IO::Endianness::LITTLE:
+                mEndianReader = std::make_shared<Formats::IO::Streams::Buffer::EndianReaders::Little>(this);
+                break;
+            case Formats::IO::Endianness::BIG:
+                mEndianReader = std::make_shared<Formats::IO::Streams::Buffer::EndianReaders::Big>(this);
+                break;
+            default:
+                assert(false); // endianness is invalid!
+        }
+    }
+
     void Buffer::ReadBytes(void* out, F_U32 size) {
-        assert(mSeek < mBufferSize);
+        assert(mSeek < (std::streampos)mBufferSize);
 
         memcpy(out, mBuffer.get() + mSeek, size);
         mSeek += size;
     }
     void Buffer::WriteBytes(const void* in, F_U32 size) {
-        assert(mSeek < mBufferSize);
+        assert(mSeek < (std::streampos)mBufferSize);
 
         memcpy(mBuffer.get() + mSeek, in, size);
         mSeek += size;
+    }
+
+    std::shared_ptr<F_U8[]> Buffer::GetBuffer() {
+        return mBuffer;
+    }
+    F_UT Buffer::GetBufferLength() {
+        return mBufferSize;
     }
 }

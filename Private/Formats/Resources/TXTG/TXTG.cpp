@@ -3,7 +3,7 @@
 #include <Formats/Resources/TXTG/Versions/V0x11/V0x11.h>
 
 namespace Formats::Resources::TXTG {
-	std::shared_ptr<TXTG> TXTG::Factory(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
+	std::shared_ptr<TXTG> TXTG::Factory(std::shared_ptr<Formats::IO::Stream> stream) {
 		std::shared_ptr<Formats::Resources::TXTG::Versions::V0x11::V0x11> v0x11 = std::make_shared<Formats::Resources::TXTG::Versions::V0x11::V0x11>();
 		v0x11->SetStream(stream);
 		if (v0x11->Parse())
@@ -12,10 +12,10 @@ namespace Formats::Resources::TXTG {
 		return nullptr;
 	}
 
-	void TXTG::SetStream(std::shared_ptr<Formats::IO::BinaryIOStreamBasic> stream) {
+	void TXTG::SetStream(std::shared_ptr<Formats::IO::Stream> stream) {
 		Formats::Resource::SetStream(stream);
 
-		mBStream = stream->Factory(Formats::IO::Endianness::LITTLE); // Unsure if endianess is specified in the format.
+		mStream->SetEndianness(Formats::IO::Endianness::LITTLE); // Unsure if endianess is specified in the format.
 	}
 
 	bool TXTG::ParseBaseInfo() {
@@ -31,7 +31,7 @@ namespace Formats::Resources::TXTG {
 		if (strcmp(signature, "6PK0") != 0)
 			return false;
 
-		mBStream = mStream->Factory(Formats::IO::Endianness::LITTLE); // Unsure if endianess is specified in the format.
+		mStream->SetEndianness(Formats::IO::Endianness::LITTLE); // Unsure if endianess is specified in the format.
 
 		return true;
 	}
@@ -45,7 +45,7 @@ namespace Formats::Resources::TXTG {
 		mStream->WriteBytes(&signature, 4);
 		signature[4] = '\0';
 
-		mBStream = mStream->Factory(Formats::IO::Endianness::LITTLE); // Unsure if endianess is specified in the format.
+		mStream->SetEndianness(Formats::IO::Endianness::LITTLE); // Unsure if endianess is specified in the format.
 
 		return true;
 	}

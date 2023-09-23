@@ -9,12 +9,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::Null;
 	}
 
-	bool Null::Parse(Formats::IO::BinaryIOStream& bStream) {
+	bool Null::Parse(Formats::IO::Stream& bStream) {
 		bStream.ReadU32();
 
 		return true;
 	}
-	bool Null::Serialize(Formats::IO::BinaryIOStream& bStream) {
+	bool Null::Serialize(Formats::IO::Stream& bStream) {
 		bStream.WriteU32(0);
 
 		return true;
