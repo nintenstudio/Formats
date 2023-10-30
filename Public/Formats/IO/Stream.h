@@ -3,6 +3,7 @@
 #include <Formats/Aliases/Primitives.h>
 #include <Formats/IO/Endianness.h>
 #include <memory>
+#include <string>
 
 // The size to allocate to a string by default when loading.
 // May have an impact on performance in some cases.

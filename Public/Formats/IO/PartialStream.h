@@ -64,6 +64,8 @@ namespace Formats::IO {
             mStream->ReadBytes(buffer, bufferLength);
 
             mStream->PopSeek();
+
+			return std::shared_ptr<F_U8[]>(buffer);
         }
 		virtual F_UT GetBufferLength() override
         {
