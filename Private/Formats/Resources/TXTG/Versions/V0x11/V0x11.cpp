@@ -100,10 +100,6 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 			deswizzle_block_linear(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), swizzledSurfaceDataExpanded.get(), swizzledSurfaceDataExpandedSize, mipBlockHeight, bytesPerBlock, &deswizzledSurfaceData, &deswizzledSurfaceDataSize);
 			mSurfaces.at(i)->mData = std::shared_ptr<F_U8[]>(deswizzledSurfaceData);
 			mSurfaces.at(i)->mDataSize = deswizzled_mip_size(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), bytesPerBlock);
-			
-			std::ofstream outfile("TEST.bin", std::ios::out | std::ios::binary);
-			outfile.write((const char*)&deswizzledSurfaceData[0], deswizzledSurfaceDataSize);
-		
 		}
 
 		return true;
@@ -111,6 +107,63 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 	bool V0x11::Serialize() {
 		if (!Formats::Resources::TXTG::TXTG::WriteBaseInfo())
 			return false;
+
+		mStream->WriteU16(mWidth);
+		mStream->WriteU16(mHeight);
+		mStream->WriteU16(mDepth);
+		mStream->WriteU8(mMipCount);
+		mStream->WriteU8(mUnk1);
+		mStream->WriteU8(mUnk2);
+		mStream->WriteU16(0); // Padding
+
+		mStream->WriteU8(mFormatFlag);
+		mStream->WriteU32(mFormatSetting);
+
+		mStream->WriteU8(mCompSelectR);
+		mStream->WriteU8(mCompSelectG);
+		mStream->WriteU8(mCompSelectB);
+		mStream->WriteU8(mCompSelectA);
+
+		mStream->WriteBytes(&mHash[0], 32);
+
+		mStream->WriteU16(mFormat);
+		mStream->WriteU16(mUnk3);
+
+		mStream->WriteU32(mTextureSetting1);
+		mStream->WriteU32(mTextureSetting2);
+		mStream->WriteU32(mTextureSetting3);
+		mStream->WriteU32(mTextureSetting4);
+
+		for (std::shared_ptr<Formats::Resources::TXTG::Versions::V0x11::Surface> surface : mSurfaces) {
+			mStream->WriteU16(surface->mArrayIndex);
+			mStream->WriteU8(surface->mMipLevel);
+			mStream->WriteU8(surface->mSurfaceCount);
+		}
+		for (std::shared_ptr<Formats::Resources::TXTG::Versions::V0x11::Surface> surface : mSurfaces) {
+			mStream->WriteU32(surface->mZSTDCompressedSize);
+			mStream->WriteU32(surface->mUnk);
+		}
+
+		Formats::Texture::Format format = GetFormat();
+		if (format == Formats::Texture::Format::UNKNOWN)
+			return false;
+		F_UT blockWidth = Formats::Texture::GetFormatBlockWidth(format);
+		F_UT blockHeight = Formats::Texture::GetFormatBlockHeight(format);
+		F_UT blockDepth = Formats::Texture::GetFormatBlockDepth(format);
+		F_UT bytesPerBlock = Formats::Texture::GetFormatBytesPerBlock(format);
+		BlockHeight blockHeightMip0 = block_height_mip0(div_round_up(mHeight, blockHeight));
+
+		for (std::shared_ptr<Formats::Resources::TXTG::Versions::V0x11::Surface> surface : mSurfaces) {
+			F_UT mipWidth = std::max(1, mWidth >> surface->mMipLevel);
+			F_UT mipHeight = std::max(1, mHeight >> surface->mMipLevel);
+			F_UT mipDepth = std::max(1, mDepth >> surface->mMipLevel);
+			BlockHeight mipBlockHeight = mip_block_height(div_round_up(mipHeight, blockHeight), blockHeightMip0);
+
+			F_U8* swizzledSurfaceData;
+			F_UT swizzledSurfaceDataSize;
+			swizzle_block_linear(div_round_up(mipWidth, blockWidth), div_round_up(mipHeight, blockHeight), div_round_up(mipDepth, blockDepth), surface->mData.get(), surface->mDataSize, mipBlockHeight, bytesPerBlock, &swizzledSurfaceData, &swizzledSurfaceDataSize);
+			mStream->WriteBytes(swizzledSurfaceData, swizzledSurfaceDataSize);
+		}
 
 		return true;
 	}
@@ -146,40 +199,40 @@ namespace Formats::Resources::TXTG::Versions::V0x11 {
 
 	Formats::Texture::Format V0x11::GetFormat() {
 		switch (mFormat) {
-		case 0x101:
-			return Formats::Texture::Format::ASTC_4x4_UNORM;
-		case 0x102:
-			return Formats::Texture::Format::ASTC_8x8_UNORM;
-		case 0x105:
-			return Formats::Texture::Format::ASTC_8x8_SRGB;
-		case 0x109:
-			return Formats::Texture::Format::ASTC_4x4_SRGB;
-		case 0x202:
-			return Formats::Texture::Format::BC1_UNORM;
-		case 0x203:
-			return Formats::Texture::Format::BC1_UNORM_SRGB;
-		case 0x302:
-			return Formats::Texture::Format::BC1_UNORM;
+			case 0x101:
+				return Formats::Texture::Format::ASTC_4x4_UNORM;
+			case 0x102:
+				return Formats::Texture::Format::ASTC_8x8_UNORM;
+			case 0x105:
+				return Formats::Texture::Format::ASTC_8x8_SRGB;
+			case 0x109:
+				return Formats::Texture::Format::ASTC_4x4_SRGB;
+			case 0x202:
+				return Formats::Texture::Format::BC1_UNORM;
+			case 0x203:
+				return Formats::Texture::Format::BC1_UNORM_SRGB;
+			case 0x302:
+				return Formats::Texture::Format::BC1_UNORM;
 
-		case 0x505:
-			return Formats::Texture::Format::BC3_UNORM_SRGB;
-		case 0x602:
-			return Formats::Texture::Format::BC4_UNORM;
-		case 0x606:
-			return Formats::Texture::Format::BC4_UNORM;
-		case 0x607:
-			return Formats::Texture::Format::BC4_UNORM;
-		case 0x702:
-			return Formats::Texture::Format::BC5_UNORM;
-		case 0x703:
-			return Formats::Texture::Format::BC5_UNORM;
-		case 0x707:
-			return Formats::Texture::Format::BC5_UNORM;
-		case 0x901:
-			return Formats::Texture::Format::BC7_UNORM;
+			case 0x505:
+				return Formats::Texture::Format::BC3_UNORM_SRGB;
+			case 0x602:
+				return Formats::Texture::Format::BC4_UNORM;
+			case 0x606:
+				return Formats::Texture::Format::BC4_UNORM;
+			case 0x607:
+				return Formats::Texture::Format::BC4_UNORM;
+			case 0x702:
+				return Formats::Texture::Format::BC5_UNORM;
+			case 0x703:
+				return Formats::Texture::Format::BC5_UNORM;
+			case 0x707:
+				return Formats::Texture::Format::BC5_UNORM;
+			case 0x901:
+				return Formats::Texture::Format::BC7_UNORM;
 
-		default:
-			return Formats::Texture::Format::UNKNOWN;
+			default:
+				return Formats::Texture::Format::UNKNOWN;
 		}
 	}
 }

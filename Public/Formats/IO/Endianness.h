@@ -2,7 +2,7 @@
 
 namespace Formats::IO {
 	enum class Endianness {
-		BIG,
-		LITTLE
+		LITTLE,
+		BIG
 	};
 }
