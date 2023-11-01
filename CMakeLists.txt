@@ -34,6 +34,8 @@ target_link_libraries(Formats PUBLIC yaml-cpp)
 
 set(ZSTD_BUILD_STATIC ON CACHE BOOL "" FORCE)
 set(ZSTD_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+set(ZSTD_BUILD_PROGRAMS OFF CACHE BOOL "" FORCE)
+set(ZSTD_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 add_subdirectory("Lib/ZSTD/build/cmake")
 target_include_directories(Formats PRIVATE Lib/ZSTD/lib)
 target_link_libraries(Formats PRIVATE libzstd_static)
