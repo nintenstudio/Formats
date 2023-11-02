@@ -29,6 +29,7 @@ endif()
 target_include_directories(Formats PRIVATE Private)
 target_include_directories(Formats PUBLIC Public)
 
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
 add_subdirectory("Lib/YAML-CPP")
 target_link_libraries(Formats PUBLIC yaml-cpp)
 
