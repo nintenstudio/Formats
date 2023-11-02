@@ -113,4 +113,7 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		mRoot->EmitYAML(emitter);
 		return emitter.c_str();
 	}
+	void V7::FromYAML(std::string text) {
+		YAML::Node root = YAML::Load(text);
+	}
 }

@@ -19,6 +19,7 @@ namespace Formats::Resources::BYML {
 		virtual void SetStream(std::shared_ptr<Formats::IO::Stream> stream) override;
 
 		virtual std::string ToYAML() = 0;
+		virtual void FromYAML(std::string text) = 0;
 
 		Formats::IO::Endianness mEndianness;
 		unsigned short mVersion;
