@@ -46,6 +46,8 @@ namespace Formats::Resources::BYML {
 
 		mStream->SetEndianness(mEndianness);
 
+		mStream->WriteU16(mVersion);
+
 		return true;
 	}
 }

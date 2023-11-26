@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void Int::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("sint32");
 		out << mValue;
+	}
+	bool Int::LoadYAML(YAML::Node& node) {
+		mValue = node.as<F_S32>();
+
+		return true;
 	}
 }

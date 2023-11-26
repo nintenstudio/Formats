@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void Bool::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("bool");
 		out << mValue;
+	}
+	bool Bool::LoadYAML(YAML::Node& node) {
+		mValue = node.as<bool>();
+
+		return true;
 	}
 }

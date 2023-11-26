@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void Float::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("float32");
 		out << mValue;
+	}
+	bool Float::LoadYAML(YAML::Node& node) {
+		mValue = node.as<F_F32>();
+
+		return true;
 	}
 }

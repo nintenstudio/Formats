@@ -113,7 +113,12 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		mRoot->EmitYAML(emitter);
 		return emitter.c_str();
 	}
-	void V7::FromYAML(std::string text) {
+	bool V7::LoadYAML(std::string text) {
+		mHashKeyTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>(this);
+		mStringTable = std::make_shared<Formats::Resources::BYML::Versions::V7::Nodes::StringTable>(this);
+
 		YAML::Node root = YAML::Load(text);
+		mRoot = Formats::Resources::BYML::Versions::V7::Node::Factory(this, root);
+		return mRoot->LoadYAML(root);
 	}
 }

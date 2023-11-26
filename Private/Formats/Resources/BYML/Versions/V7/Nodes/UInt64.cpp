@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void UInt64::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("uint64");
 		out << mValue;
+	}
+	bool UInt64::LoadYAML(YAML::Node& node) {
+		mValue = node.as<F_U64>();
+
+		return true;
 	}
 }

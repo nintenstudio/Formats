@@ -10,5 +10,6 @@ namespace Formats::Resources::BYML {
 		virtual bool Serialize(Formats::IO::Stream& bStream) = 0;
 
 		virtual void EmitYAML(YAML::Emitter& out) = 0;
+		virtual bool LoadYAML(YAML::Node& node) = 0;
 	};
 }

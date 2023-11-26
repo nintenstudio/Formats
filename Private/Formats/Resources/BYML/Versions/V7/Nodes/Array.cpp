@@ -313,4 +313,18 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		out << YAML::EndSeq;
 	}
+	bool Array::LoadYAML(YAML::Node& node) {
+		mNodes.clear();
+		for (YAML::iterator it = node.begin(); it != node.end(); it++) {
+			YAML::Node n = *it;
+
+			std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node> newNode = Formats::Resources::BYML::Versions::V7::Node::Factory(mParentBYML, n);
+			if (!newNode->LoadYAML(n))
+				return false;
+
+			mNodes.push_back(newNode);
+		}
+
+		return true;
+	}
 }

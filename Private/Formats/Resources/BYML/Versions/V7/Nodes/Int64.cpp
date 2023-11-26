@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void Int64::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("sint64");
 		out << mValue;
+	}
+	bool Int64::LoadYAML(YAML::Node& node) {
+		mValue = node.as<F_S64>();
+
+		return true;
 	}
 }

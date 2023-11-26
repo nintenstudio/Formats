@@ -23,4 +23,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	void Null::EmitYAML(YAML::Emitter& out) {
 		out << "null";
 	}
+	bool Null::LoadYAML(YAML::Node& node) {
+		return true;
+	}
 }

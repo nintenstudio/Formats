@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void UInt::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("uint32");
 		out << mValue;
+	}
+	bool UInt::LoadYAML(YAML::Node& node) {
+		mValue = node.as<F_U32>();
+
+		return true;
 	}
 }

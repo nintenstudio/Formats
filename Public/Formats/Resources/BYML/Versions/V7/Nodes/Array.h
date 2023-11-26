@@ -24,6 +24,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual std::shared_ptr<Formats::Resources::BYML::Node> GetNode(F_U32 index) override;
 
 		virtual void EmitYAML(YAML::Emitter& out) override;
+		virtual bool LoadYAML(YAML::Node& node) override;
 
 		std::vector<Formats::Resources::BYML::Versions::V7::NodeType::NodeType> mNodeTypes;
 		std::vector<std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mNodes;

@@ -21,6 +21,11 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void String::EmitYAML(YAML::Emitter& out) {
-		out << mParentBYML->mStringTable->mStrings.at(mIndex);
+		out << mParentBYML->mStringTable->GetString(mIndex);
+	}
+	bool String::LoadYAML(YAML::Node& node) {
+		mIndex = mParentBYML->mStringTable->AddString(node.as<std::string>());
+
+		return true;
 	}
 }

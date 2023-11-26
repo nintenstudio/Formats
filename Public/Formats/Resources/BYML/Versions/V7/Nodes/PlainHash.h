@@ -23,6 +23,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual std::shared_ptr<Formats::Resources::BYML::Node> GetValue(F_U32 key) override;
 
 		virtual void EmitYAML(YAML::Emitter& out) override;
+		virtual bool LoadYAML(YAML::Node& node) override;
 
 		std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> mMap;
 	};

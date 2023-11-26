@@ -289,14 +289,14 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		std::vector<std::string> res;
 		res.reserve(mMap.size());
 		for (std::map<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>>::iterator it = mMap.begin(); it != mMap.end(); ++it) {
-			res.push_back(mParentBYML->mHashKeyTable->mStrings.at(it->first));
+			res.push_back(mParentBYML->mHashKeyTable->GetString(it->first));
 		}
 
 		return res;
 	}
 
 	std::shared_ptr<Formats::Resources::BYML::Node> StringHash::GetValue(std::string key) {
-		F_U32 stringIndex = std::find(mParentBYML->mHashKeyTable->mStrings.begin(), mParentBYML->mHashKeyTable->mStrings.end(), key) - mParentBYML->mHashKeyTable->mStrings.begin();
+		F_U32 stringIndex = mParentBYML->mHashKeyTable->GetStringIndex(key);
 		if (stringIndex == std::numeric_limits<F_U32>::max())
 			return nullptr;
 
@@ -309,10 +309,22 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		out << YAML::BeginMap;
 		for (const std::pair<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> pair : mMap) {
 			out << YAML::Key;
-			out << mParentBYML->mHashKeyTable->mStrings.at(pair.first);
+			out << mParentBYML->mHashKeyTable->GetString(pair.first);
 			out << YAML::Value;
 			pair.second->EmitYAML(out);
 		}
 		out << YAML::EndMap;
+	}
+	bool StringHash::LoadYAML(YAML::Node& node) {
+		mMap.clear();
+		for (YAML::iterator it = node.begin(); it != node.end(); it++) {
+			std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node> newNode = Formats::Resources::BYML::Versions::V7::Node::Factory(mParentBYML, it->second);
+			if (!newNode->LoadYAML(it->second))
+				return false;
+
+			mMap.emplace(mParentBYML->mHashKeyTable->AddString(it->first.as<std::string>()), newNode);
+		}
+
+		return true;
 	}
 }

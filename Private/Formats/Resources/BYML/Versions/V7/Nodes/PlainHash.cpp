@@ -308,6 +308,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void PlainHash::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("plainhash");
 		out << YAML::BeginMap;
 		for (const std::pair<F_U32, std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node>> pair : mMap) {
 			out << YAML::Key;
@@ -316,5 +317,16 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 			pair.second->EmitYAML(out);
 		}
 		out << YAML::EndMap;
+	}
+	bool PlainHash::LoadYAML(YAML::Node& node) {
+		mMap.clear();
+		for (YAML::iterator it = node.begin(); it != node.end(); it++) {
+			std::shared_ptr<Formats::Resources::BYML::Versions::V7::Node> newNode = Formats::Resources::BYML::Versions::V7::Node::Factory(mParentBYML, it->second);
+			newNode->LoadYAML(it->second);
+
+			mMap.emplace(it->first.as<F_U32>(), newNode);
+		}
+
+		return true;
 	}
 }

@@ -18,8 +18,14 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual bool Parse(Formats::IO::Stream& bStream) override;
 		virtual bool Serialize(Formats::IO::Stream& bStream) override;
 
-		virtual void EmitYAML(YAML::Emitter& out) override;
+		std::string GetString(F_U32 index);
+		F_U32 AddString(std::string string);
+		F_U32 GetStringIndex(std::string string);
 
+		virtual void EmitYAML(YAML::Emitter& out) override;
+		virtual bool LoadYAML(YAML::Node& node) override;
+
+	private:
 		std::vector<std::string> mStrings;
 	};
 }

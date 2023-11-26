@@ -25,6 +25,12 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 	}
 
 	void Double::EmitYAML(YAML::Emitter& out) {
+		out << YAML::LocalTag("float64");
 		out << mValue;
+	}
+	bool Double::LoadYAML(YAML::Node& node) {
+		mValue = node.as<F_F64>();
+
+		return true;
 	}
 }

@@ -12,29 +12,30 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		return Formats::Resources::BYML::Versions::V7::NodeType::StringTable;
 	}
 
-	bool StringTable::Parse(Formats::IO::Stream& bStream) {
-		std::streampos nodeStart = bStream.GetSeek();
+	bool StringTable::Parse(Formats::IO::Stream& stream) {
+		std::streampos nodeStart = stream.GetSeek();
 
-		if (bStream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable)
+		if (stream.ReadU8() != Formats::Resources::BYML::Versions::V7::NodeType::StringTable)
 			return false;
 
 		mStrings.clear();
 
-		F_U24 numEntries = bStream.ReadU24();
+		F_U24 numEntries = stream.ReadU24();
 
 		std::streampos stringsEnd;
-		mStrings.reserve(numEntries + 1);
-		for (F_U32 i = 0; i < numEntries + 1; i++) {
-			std::streampos stringOffset = bStream.ReadU32();
-			bStream.PushSeek(nodeStart + stringOffset);
+		mStrings.reserve(numEntries);
+		for (F_U32 i = 0; i < numEntries; i++) {
+			std::streampos stringOffset = stream.ReadU32();
+			stream.PushSeek(nodeStart + stringOffset);
 			
-			mStrings.push_back(bStream.ReadZeroTerminatedString());
+			mStrings.push_back(stream.ReadZeroTerminatedString());
 
-			stringsEnd = bStream.GetSeek();
-			bStream.PopSeek();
+			stringsEnd = stream.GetSeek();
+			stream.PopSeek();
 		}
+		stream.ReadU32(); // The end-of-list pointer
 
-		bStream.Seek(stringsEnd);
+		stream.Seek(stringsEnd);
 		return true;
 	}
 	bool StringTable::Serialize(Formats::IO::Stream& stream) {
@@ -42,10 +43,10 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 
 		stream.WriteU8(Formats::Resources::BYML::Versions::V7::NodeType::StringTable);
 
-		stream.WriteU24(mStrings.size() - 1);
+		stream.WriteU24(mStrings.size());
 		
 		std::streampos stringOffsetsStart = stream.GetSeek();
-		std::streampos stringsStart = stringOffsetsStart + (std::streampos)(sizeof(F_U32) * mStrings.size());
+		std::streampos stringsStart = stringOffsetsStart + (std::streampos)(sizeof(F_U32) * (mStrings.size() + 1));
 		std::streampos stringsEnd;
 		stream.PushSeek(stringsStart);
 		for (F_U32 i = 0; i < mStrings.size(); i++) {
@@ -57,13 +58,36 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		}
 		stream.AlignSeek(4);
 		stringsEnd = stream.GetSeek();
+		stream.PushSeek(stringOffsetsStart + (std::streampos)(sizeof(F_U32) * mStrings.size()));
+		stream.WriteU32(stringsEnd - nodeStart);
+		stream.PopSeek();
 		stream.PopSeek();
 
 		stream.Seek(stringsEnd);
 		return true;
 	}
 
+	std::string StringTable::GetString(F_U32 index) {
+		return mStrings.at(index);
+	}
+	F_U32 StringTable::AddString(std::string string) {
+		F_U32 index = GetStringIndex(string);
+		if (index != std::numeric_limits<F_U32>::max())
+			return index;
+
+		mStrings.push_back(string);
+		return mStrings.size() - 1;
+	}
+	F_U32 StringTable::GetStringIndex(std::string string) {
+		std::vector<std::string>::iterator it = std::find(mStrings.begin(), mStrings.end(), string);
+
+		return it != mStrings.end() ? it - mStrings.begin() : std::numeric_limits<F_U32>::max();
+	}
+
 	void StringTable::EmitYAML(YAML::Emitter& out) {
 
+	}
+	bool StringTable::LoadYAML(YAML::Node& node) {
+		return true;
 	}
 }

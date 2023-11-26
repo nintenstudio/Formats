@@ -21,6 +21,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual bool GetValue() override;
 
 		virtual void EmitYAML(YAML::Emitter& out) override;
+		virtual bool LoadYAML(YAML::Node& node) override;
 
 		bool mValue;
 	};

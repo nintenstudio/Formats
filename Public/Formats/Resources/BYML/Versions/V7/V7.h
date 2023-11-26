@@ -15,7 +15,7 @@ namespace Formats::Resources::BYML::Versions::V7 {
 		virtual bool RequestParse(Formats::ResourceParsedCallback callback) override;
 
 		virtual std::string ToYAML() override;
-		virtual void FromYAML(std::string text) override;
+		virtual bool LoadYAML(std::string text) override;
 
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mHashKeyTable;
 		std::shared_ptr<Formats::Resources::BYML::Versions::V7::Nodes::StringTable> mStringTable;

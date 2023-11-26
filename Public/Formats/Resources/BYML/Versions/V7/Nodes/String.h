@@ -18,6 +18,7 @@ namespace Formats::Resources::BYML::Versions::V7::Nodes {
 		virtual bool Serialize(Formats::IO::Stream& bStream) override;
 
 		virtual void EmitYAML(YAML::Emitter& out) override;
+		virtual bool LoadYAML(YAML::Node& node) override;
 
 		F_U32 mIndex;
 	};
